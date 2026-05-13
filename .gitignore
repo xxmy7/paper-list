@@ -12,10 +12,9 @@ templates/
 # Legacy backup of the pre-refactor ICML browser (11 MB)
 icml2026_browser.OLD.html
 
-# Project-internal docs (keep local) — they describe the build pipeline,
+# Project-internal docs (keep local) — describe the build pipeline,
 # which isn't in this view-only deployment.
 CLAUDE.md
-README.md
 
 # Python / OS / editor cruft
 __pycache__/
