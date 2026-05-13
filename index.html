@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Conference Papers — Index</title>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; max-width: 720px; margin: 48px auto; padding: 0 24px; color: #1a1a1a; background: #f7f8fa; }
+  h1 { font-size: 22px; margin: 0 0 16px; }
+  .sub { color: #586069; font-size: 13px; margin-bottom: 28px; }
+  .card { display: block; background: #fff; border: 1px solid #e1e4e8; border-radius: 8px; padding: 14px 18px; margin-bottom: 10px; text-decoration: none; color: inherit; transition: border-color 0.15s; }
+  .card:hover { border-color: #0366d6; }
+  .row { display: flex; align-items: baseline; gap: 12px; }
+  .name { font-size: 16px; font-weight: 600; }
+  .meta { font-size: 12px; color: #586069; }
+  .count { margin-left: auto; font-size: 13px; color: #0366d6; font-weight: 500; }
+  .source { font-size: 11px; padding: 1px 7px; border-radius: 10px; background: #eef3ff; color: #0366d6; }
+  .source.dblp { background: #f6f8fa; color: #586069; }
+  .empty { color: #586069; padding: 24px; text-align: center; }
+  footer { margin-top: 32px; font-size: 12px; color: #586069; }
+</style>
+</head>
+<body>
+<h1>Conference Papers Index</h1>
+<div class="sub">A local catalogue of conference papers. Click a conference to open its browser.</div>
+<div id="list"></div>
+<footer>
+  Add a new conference: see <code>README.md</code>. Data lives in <code>conferences/</code>; generated viewers in <code>browsers/</code>.
+</footer>
+<script>
+fetch('conferences/index.json')
+  .then(r => r.json())
+  .then(data => {
+    const list = document.getElementById('list');
+    const confs = (data && data.conferences) || [];
+    if (confs.length === 0) {
+      list.innerHTML = '<div class="empty">No conferences yet. Run scripts/build_*.py to populate.</div>';
+      return;
+    }
+    for (const e of confs) {
+      const a = document.createElement('a');
+      a.href = e.browser_path;
+      a.className = 'card';
+      a.innerHTML = `
+        <div class="row">
+          <span class="name">${e.name}</span>
+          <span class="meta">${e.venue} ${e.year}</span>
+          <span class="source ${e.source}">${e.source}</span>
+          <span class="count">${e.paper_count} papers</span>
+        </div>
+      `;
+      list.appendChild(a);
+    }
+  })
+  .catch(err => {
+    document.getElementById('list').innerHTML = `<div class="empty">Failed to load index.json: ${err}.<br>Open conferences/index.json may require running this from a local HTTP server (e.g., <code>python -m http.server</code>).<br>You can also click directly into <code>browsers/*.html</code>.</div>`;
+  });
+</script>
+</body>
+</html>
