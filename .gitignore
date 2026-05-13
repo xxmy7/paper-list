@@ -3,7 +3,10 @@
 # All build pipeline, source data, and intermediates stay local.
 
 raw/
-scripts/
+scripts/*
+# Exception: serve.py is the local save-favorites server invoked by the
+# in-page "★ Save" button. Ship it so cloned checkouts can use Save too.
+!scripts/serve.py
 conferences/
 analyses/
 shared/
