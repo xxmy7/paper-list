@@ -6,6 +6,8 @@
 // Hand-editing is fine: keep the structure {conf_id: [paper_id, ...]}.
 window.FAVORITES_SYNCED = {
   "version": 1,
+  "cvpr2026": [],
+  "iclr2026": [],
   "icml2026": [
     "64991",
     "65567"

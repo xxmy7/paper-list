@@ -19,6 +19,9 @@ icml2026_browser.OLD.html
 # which isn't in this view-only deployment.
 CLAUDE.md
 
+# Claude Code project config
+.claude/
+
 # Python / OS / editor cruft
 __pycache__/
 *.pyc
