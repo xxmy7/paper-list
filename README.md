@@ -20,16 +20,17 @@ If Pages is enabled, the site is served at
 
 ## What's inside
 
-| Conference | Papers | Abstracts | Institutions | Multi-aff authors |
-| ---------- | -----: | --------: | -----------: | ----------------: |
-| CVPR 2026  | 4 069  | —         | —            | —                 |
-| ICLR 2026  | 5 424  | ~99%      | ~99%         | —                 |
-| ICML 2026  | 6 567  | ~99%      | 99.97%       | 4.8%              |
-| KDD 2026   | 256    | 100%      | 100%         | 26.8%             |
-| WWW 2026   | 954    | 90.8%     | 75.2%        | 7.5%              |
+| Conference | Papers | Abstracts | Institutions | Tags | Tracks |
+| ---------- | -----: | --------: | -----------: | ---: | ------ |
+| AAAI 2026  | 4 955  | 98.4%     | 79.2%        | 76%  | 6 tabs (Main / Alignment / Social Impact / Journal / Demo / Senior) |
+| CVPR 2026  | 4 069  | —         | —            | 100% | Spotlight / Regular |
+| ICLR 2026  | 5 424  | ~99%      | ~99%         | 100% | Spotlight / Regular |
+| ICML 2026  | 6 567  | ~99%      | 99.97%       | 100% | Spotlight / Regular |
+| KDD 2026   | 256    | 100%      | 100%         | 100% | Jul / Feb cycle × Research / ADS |
+| WWW 2026   | 954    | 90.8%     | 75.2%        | 100% | Research / Industry / Short / Web4Good |
 
-Coverage gaps are mostly tracks that ACM hasn't published yet — they'll
-fill in closer to the conferences' final publication dates.
+Coverage gaps are mostly venues that haven't finished ACM/OJS ingestion
+yet — they'll fill in closer to the conferences' final publication dates.
 
 ## Features
 
@@ -71,6 +72,8 @@ includes folder assignments) and commit it to the repo.
 
 ## Data sources
 
+- AAAI — DBLP API (4955 papers) + OpenAlex/Semantic Scholar abstracts +
+  OJS article metadata for track classification
 - ICML — icml.cc miniconf API + OpenReview
 - KDD — DBLP proceedings + the ACM v1 bundled PDF for abstracts + ins
 - WWW — DBLP proceedings + ACM main proceedings PDF + Crossref / OpenAlex
