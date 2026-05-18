@@ -22,6 +22,8 @@ If Pages is enabled, the site is served at
 
 | Conference | Papers | Abstracts | Institutions | Multi-aff authors |
 | ---------- | -----: | --------: | -----------: | ----------------: |
+| CVPR 2026  | 4 069  | —         | —            | —                 |
+| ICLR 2026  | 5 424  | ~99%      | ~99%         | —                 |
 | ICML 2026  | 6 567  | ~99%      | 99.97%       | 4.8%              |
 | KDD 2026   | 256    | 100%      | 100%         | 26.8%             |
 | WWW 2026   | 954    | 90.8%     | 75.2%        | 7.5%              |
@@ -40,6 +42,32 @@ fill in closer to the conferences' final publication dates.
 - **Author institution superscripts**: single (`Name¹`) or multi-affiliation
   (`Name¹,³`) supported
 - **Direct links**: per-paper ACM page, OpenReview / icml.cc page, DBLP record
+- **Favorites + Folders**: star papers across conferences, organize into
+  named folders, filter by folder, export per-folder paper lists
+
+### Favorites & Folders
+
+Star any paper (click ★) to add it to your favorites. Right-click ★ to
+assign the paper to one or more folders (e.g. "Thesis", "Baselines",
+"Urban-ST").
+
+| Action | How |
+| ------ | --- |
+| Create folder | Click `⚙ Folders` → type name → Add |
+| Assign to folder | Right-click ★ on a card → pick folders |
+| Filter by folder | Enable "★ Favorites only" → select folder from dropdown |
+| Export one folder | `⚙ Folders` → "Export current folder" (downloads .md) |
+| Export all folders | `⚙ Folders` → "Export all folders" |
+| Rename / delete | `⚙ Folders` → ✎ / ✕ buttons |
+
+All folder data lives in the browser's localStorage — no server required.
+To sync across machines, use "★ Export" (downloads `favorites.js` which
+includes folder assignments) and commit it to the repo.
+
+> **When is `serve.py` needed?**
+> Only for the "⤓ Save" button, which writes `favorites.js` directly to
+> disk via a local POST endpoint. Everything else (folders, filtering,
+> export downloads) works on GitHub Pages or `file://` with no server.
 
 ## Data sources
 
