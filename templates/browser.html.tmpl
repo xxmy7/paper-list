@@ -421,7 +421,7 @@
   .folder-add-row input {
     flex: 1;
     font-size: 12px;
-    padding: 4px 8px;
+    padding: 4px 8px 4px 24px;
     border: 1px solid var(--rule);
     border-radius: 3px;
     font-family: 'Inter Tight', sans-serif;
@@ -1092,7 +1092,7 @@ window.MathJax = {
     <span class="folder-modal-close" id="folder-modal-close">&times;</span>
     <h3>Manage Folders</h3>
     <div class="folder-add-row">
-      <input type="text" id="folder-new-name" placeholder="New folder name…">
+      <input type="text" id="folder-new-name" placeholder="New folder name…" autocomplete="off" data-form-type="other" data-lpignore="true">
       <button id="folder-add-btn">Add</button>
     </div>
     <ul class="folder-modal-list" id="folder-modal-list"></ul>
