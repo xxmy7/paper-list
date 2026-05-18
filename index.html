@@ -27,40 +27,44 @@
   Add a new conference: see <code>README.md</code>. Data lives in <code>conferences/</code>; generated viewers in <code>browsers/</code>.
 </footer>
 <script>
-const confs = [
-  {name:"AAAI 2026", venue:"AAAI", year:2026, source:"dblp-api", paper_count:4955, browser_path:"browsers/aaai2026.html"},
-  {name:"CVPR 2026", venue:"CVPR", year:2026, source:"miniconf", paper_count:4069, browser_path:"browsers/cvpr2026.html"},
-  {name:"ICLR 2026", venue:"ICLR", year:2026, source:"miniconf", paper_count:5424, browser_path:"browsers/iclr2026.html"},
-  {name:"ICML 2026", venue:"ICML", year:2026, source:"openreview", paper_count:6567, browser_path:"browsers/icml2026.html"},
-  {name:"KDD 2026",  venue:"KDD",  year:2026, source:"dblp", paper_count:256, browser_path:"browsers/kdd2026.html"},
-  {name:"WWW 2026",  venue:"WWW",  year:2026, source:"dblp", paper_count:954, browser_path:"browsers/www2026.html"},
-];
-const list = document.getElementById('list');
-for (const e of confs) {
-  const a = document.createElement('a');
-  a.href = e.browser_path;
-  a.className = 'card';
-  a.innerHTML = `
-    <div class="row">
-      <span class="name">${e.name}</span>
-      <span class="meta">${e.venue} ${e.year}</span>
-      <span class="source ${e.source}">${e.source}</span>
-      <span class="count">${e.paper_count} papers</span>
-    </div>
-  `;
-  list.appendChild(a);
-}
-const fav = document.createElement('a');
-fav.href = 'browsers/favorites.html';
-fav.className = 'card';
-fav.innerHTML = `
-  <div class="row">
-    <span class="name">★ Favorites</span>
-    <span class="meta">merged across conferences</span>
-    <span class="count">your starred papers</span>
-  </div>
-`;
-list.appendChild(fav);
+fetch('conferences/index.json')
+  .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
+  .then(data => {
+    const list = document.getElementById('list');
+    const confs = (data && data.conferences) || [];
+    if (confs.length === 0) {
+      list.innerHTML = '<div class="empty">No conferences found.</div>';
+      return;
+    }
+    for (const e of confs) {
+      const a = document.createElement('a');
+      a.href = e.browser_path;
+      a.className = 'card';
+      a.innerHTML = `
+        <div class="row">
+          <span class="name">${e.name}</span>
+          <span class="meta">${e.venue} ${e.year}</span>
+          <span class="source ${e.source}">${e.source}</span>
+          <span class="count">${e.paper_count} papers</span>
+        </div>
+      `;
+      list.appendChild(a);
+    }
+    const fav = document.createElement('a');
+    fav.href = 'browsers/favorites.html';
+    fav.className = 'card';
+    fav.innerHTML = `
+      <div class="row">
+        <span class="name">★ Favorites</span>
+        <span class="meta">merged across conferences</span>
+        <span class="count">your starred papers</span>
+      </div>
+    `;
+    list.appendChild(fav);
+  })
+  .catch(err => {
+    document.getElementById('list').innerHTML = `<div class="empty">Failed to load index.json (${err}).<br>You can also open <code>browsers/*.html</code> directly.</div>`;
+  });
 </script>
 </body>
 </html>

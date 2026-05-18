@@ -1,0 +1,64 @@
+{
+  "conferences": [
+    {
+      "id": "aaai2026",
+      "name": "AAAI 2026",
+      "venue": "AAAI",
+      "year": 2026,
+      "source": "dblp-api",
+      "paper_count": 4955,
+      "data_path": "conferences/aaai2026.json",
+      "browser_path": "browsers/aaai2026.html"
+    },
+    {
+      "id": "cvpr2026",
+      "name": "CVPR 2026",
+      "venue": "CVPR",
+      "year": 2026,
+      "source": "miniconf",
+      "paper_count": 4069,
+      "data_path": "conferences/cvpr2026.json",
+      "browser_path": "browsers/cvpr2026.html"
+    },
+    {
+      "id": "iclr2026",
+      "name": "ICLR 2026",
+      "venue": "ICLR",
+      "year": 2026,
+      "source": "miniconf",
+      "paper_count": 5424,
+      "data_path": "conferences/iclr2026.json",
+      "browser_path": "browsers/iclr2026.html"
+    },
+    {
+      "id": "icml2026",
+      "name": "ICML 2026",
+      "venue": "ICML",
+      "year": 2026,
+      "source": "openreview",
+      "paper_count": 6567,
+      "data_path": "conferences/icml2026.json",
+      "browser_path": "browsers/icml2026.html"
+    },
+    {
+      "id": "kdd2026",
+      "name": "KDD 2026",
+      "venue": "KDD",
+      "year": 2026,
+      "source": "dblp",
+      "paper_count": 256,
+      "data_path": "conferences/kdd2026.json",
+      "browser_path": "browsers/kdd2026.html"
+    },
+    {
+      "id": "www2026",
+      "name": "WWW 2026",
+      "venue": "WWW",
+      "year": 2026,
+      "source": "dblp",
+      "paper_count": 954,
+      "data_path": "conferences/www2026.json",
+      "browser_path": "browsers/www2026.html"
+    }
+  ]
+}

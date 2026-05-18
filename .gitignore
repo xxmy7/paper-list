@@ -8,6 +8,7 @@ scripts/*
 # in-page "★ Save" button. Ship it so cloned checkouts can use Save too.
 !scripts/serve.py
 conferences/
+!conferences/index.json
 analyses/
 shared/
 templates/
