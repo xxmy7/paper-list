@@ -1,9 +1,8 @@
 # Conference Paper List
 
-A personal browser for ML conference proceedings, focused on urban /
-spatiotemporal / geospatial research directions. Each conference is a
-single self-contained HTML file with offline search, filter, and tag
-navigation — no server, no JS framework, no install.
+A browser for ML conference proceedings. Each conference is a single
+self-contained HTML file with offline search, filter, and tag navigation
+— no server, no JS framework, no install.
 
 ## Usage
 
