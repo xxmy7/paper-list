@@ -1,0 +1,2437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Paper List</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..700&family=Fraunces:opsz,wght,SOFT@9..144,400..600,0..100&family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* ===========================================================
+     Catalog — editorial reading list (light surface).
+     Titles in clean sans; body / chips / marginalia in Fraunces.
+     Palette: light page, ink, oxide-red, saffron, moss.
+     =========================================================== */
+  :root {
+    --page:         #f6f8fa;     /* page background */
+    --paper:        #ffffff;     /* card / header surface */
+    --paper-rib:    #f1f3f5;     /* hover band */
+    --paper-deep:   #eef1f4;     /* abstract block */
+    --rule:         #e1e4e8;     /* hairline */
+    --rule-soft:    #eef0f3;
+    --ink:          #1a1a1a;
+    --ink-2:        #383b40;
+    --ink-3:        #5c636b;
+    --ink-4:        #8a929b;
+    --oxide:        #8c2b1c;     /* primary accent — active tab, links */
+    --oxide-tint:   #fbe9e5;
+    --oxide-deep:   #6b1f13;
+    --saffron:      #b8862a;     /* spotlight bookmark — for badge text contrast */
+    --saffron-tint: #fdf3d6;
+    --gold:         #e3a318;     /* brighter gold for spotlight border + gutter number */
+    --moss:         #2f6b46;
+    --moss-tint:    #e2eee6;
+    --slate:        #2a5680;     /* poster badge — cool counterpart to saffron */
+    --slate-tint:   #e3ecf5;
+    --slate-deep:   #1d3f5e;
+    --highlight:    #fff3a0;
+    --focus:        #8c2b1c;
+  }
+
+  * { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    margin: 0;
+    background: var(--page);
+    color: var(--ink);
+    font-family: 'Inter Tight', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection { background: var(--saffron-tint); color: var(--ink); }
+
+  /* ---------- HEADER --------------------------------------- */
+  header {
+    position: sticky; top: 0; z-index: 100;
+    background: var(--paper);
+    border-bottom: 1px solid var(--rule);
+    padding: 14px 32px 10px;
+  }
+  header::after {
+    /* chapter rule — a second hairline */
+    content: "";
+    position: absolute; left: 32px; right: 32px; bottom: 4px;
+    height: 1px; background: var(--rule-soft);
+  }
+
+  /* h1 — Bricolage Grotesque: a modern variable grotesque with subtle
+     character (slight optical-size flair at display sizes). */
+  h1 {
+    margin: 0 0 10px;
+    font-family: 'Bricolage Grotesque', 'Inter Tight', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 24px;
+    font-weight: 600;
+    font-variation-settings: "opsz" 36;
+    letter-spacing: -0.018em;
+    color: var(--ink);
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    line-height: 1.15;
+  }
+  h1 .conf-select {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 4px 22px 4px 8px;
+    border: 1px solid var(--rule);
+    border-radius: 0;
+    background: transparent
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='6' viewBox='0 0 8 6'><path d='M0 0l4 6 4-6z' fill='%238c2b1c'/></svg>")
+      no-repeat right 6px center;
+    color: var(--ink-2);
+    cursor: pointer;
+    -webkit-appearance: none; -moz-appearance: none; appearance: none;
+    align-self: center;
+  }
+  h1 .conf-select:hover { border-color: var(--oxide); color: var(--ink); }
+  h1 .conf-count {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-weight: 400;
+    font-size: 12px;
+    color: var(--ink-4);
+    letter-spacing: 0.02em;
+    align-self: center;
+  }
+
+  .row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 6px;
+  }
+  .row:last-of-type { margin-bottom: 0; }
+
+  /* Tabs — typographic, oxide underline on active */
+  .tabs {
+    display: flex;
+    gap: 2px;
+    align-items: stretch;
+    margin-right: 4px;
+  }
+  .tab {
+    padding: 5px 11px 6px;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    font-family: 'Inter Tight', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    color: var(--ink-3);
+    text-transform: uppercase;
+    border-bottom: 2px solid transparent;
+    transition: color 120ms ease, border-color 120ms ease;
+    border-radius: 0;
+  }
+  .tab:hover { color: var(--ink); }
+  .tab.active {
+    color: var(--oxide);
+    border-bottom-color: var(--oxide);
+    background: transparent;
+  }
+  .tab .count {
+    margin-left: 5px;
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 10.5px;
+    font-weight: 400;
+    color: var(--ink-4);
+    letter-spacing: 0;
+    text-transform: none;
+  }
+  .tab.active .count { color: var(--oxide); }
+
+  /* Track sub-tabs (the second row, only when BADGES is configured).
+     Slightly smaller / lighter than the cycle tabs above. */
+  .track-tabs .tab {
+    padding: 3px 9px 4px;
+    font-size: 11px;
+    letter-spacing: 0.03em;
+  }
+  .track-tabs .tab .count { font-size: 10px; }
+
+  /* Inputs / selects — bottom-rule, no boxes */
+  input[type=text],
+  select {
+    font-family: 'Inter Tight', sans-serif;
+    font-size: 13px;
+    color: var(--ink);
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid var(--rule);
+    border-radius: 0;
+    padding: 5px 8px 5px 10px;
+    outline: none;
+    transition: border-color 140ms ease;
+  }
+  select {
+    -webkit-appearance: none; -moz-appearance: none; appearance: none;
+    padding-right: 22px;
+    background:
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='6' viewBox='0 0 8 6'><path d='M0 0l4 6 4-6z' fill='%235c636b'/></svg>")
+      no-repeat right 4px center;
+    cursor: pointer;
+    max-width: 300px;
+  }
+  select:hover { border-color: var(--ink-3); }
+  select option { background: var(--paper); color: var(--ink); padding: 6px 14px 6px 14px; }
+  select option.top-level { font-weight: 600; color: var(--ink-2); }
+  select optgroup { font-family: 'Inter Tight', sans-serif; font-style: normal; font-weight: 600; color: var(--ink-2); padding-left: 10px; }
+
+  /* Keyword tag names can run long ("spatiotemporal forecasting" etc.) —
+     give the keyword dropdown more room so the open list is comfortable. */
+  #kw-topic { max-width: 460px; min-width: 280px; }
+  #official-topic { max-width: 460px; min-width: 240px; }
+
+  input[type=text] {
+    min-width: 320px;
+    border-bottom: 1px solid var(--ink-3);
+    font-size: 14px;
+    padding-left: 22px;
+    background:
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%235c636b' stroke-width='2' stroke-linecap='round'><circle cx='11' cy='11' r='7'/><path d='M21 21l-4.3-4.3'/></svg>")
+      no-repeat left 2px center;
+  }
+  input[type=text]:focus,
+  select:focus { border-bottom-color: var(--oxide); }
+  input[type=text]::placeholder {
+    color: var(--ink-4);
+    font-style: italic;
+  }
+
+  input[type=checkbox] {
+    -webkit-appearance: none; -moz-appearance: none; appearance: none;
+    width: 13px; height: 13px;
+    border: 1px solid var(--ink-3);
+    border-radius: 2px;
+    background: transparent;
+    cursor: pointer;
+    position: relative;
+    margin: 0 4px 0 0;
+    vertical-align: -2px;
+    transition: background-color 100ms ease, border-color 100ms ease;
+  }
+  input[type=checkbox]:checked {
+    background: var(--oxide);
+    border-color: var(--oxide);
+  }
+  input[type=checkbox]:checked::after {
+    content: "";
+    position: absolute; left: 3px; top: 0px;
+    width: 4px; height: 8px;
+    border: solid var(--paper);
+    border-width: 0 1.5px 1.5px 0;
+    transform: rotate(45deg);
+  }
+
+  label {
+    font-size: 12px;
+    color: var(--ink-3);
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+  }
+  label:hover { color: var(--ink); }
+
+  .filter-label {
+    font-family: 'Fraunces', Georgia, serif;
+    font-style: italic;
+    font-size: 12px;
+    color: var(--ink-3);
+    margin-right: -4px;
+    font-weight: 400;
+    letter-spacing: 0.005em;
+  }
+
+  .stats {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 11px;
+    color: var(--ink-3);
+    margin-left: auto;
+    letter-spacing: 0.02em;
+  }
+
+  .reset {
+    font-size: 11.5px;
+    font-weight: 500;
+    color: var(--oxide);
+    cursor: pointer;
+    padding: 2px 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .reset:hover { color: var(--oxide-deep); }
+
+  .back-btn {
+    font-size: 11.5px;
+    font-weight: 500;
+    color: var(--ink-2);
+    cursor: pointer;
+    padding: 2px 4px;
+    display: none;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .back-btn:hover { color: var(--oxide); }
+
+  .warn {
+    font-family: 'Fraunces', Georgia, serif;
+    font-style: italic;
+    font-size: 12px;
+    color: var(--saffron);
+    display: none;
+  }
+
+  /* ---------- FAVORITES ------------------------------------ */
+  .fav-only-label {
+    font-size: 12px;
+    color: var(--ink-3);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .fav-only-label input { margin: 0; cursor: pointer; }
+  .fav-only-label .count {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 10.5px;
+    color: var(--saffron);
+    padding: 1px 5px;
+    background: var(--saffron-tint);
+    border-radius: 2px;
+    min-width: 18px;
+    text-align: center;
+  }
+  .fav-tool {
+    font-size: 11.5px;
+    font-weight: 500;
+    color: var(--ink-3);
+    cursor: pointer;
+    padding: 2px 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .fav-tool:hover { color: var(--saffron); }
+
+  /* ---------- FOLDERS ------------------------------------- */
+  .folder-select {
+    font-size: 12px;
+    font-family: 'Inter Tight', sans-serif;
+    padding: 2px 8px;
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    background: var(--paper);
+    color: var(--ink-2);
+    cursor: pointer;
+    max-width: 160px;
+  }
+  .folder-select:focus { border-color: var(--oxide); outline: none; }
+  .folder-manage-btn {
+    font-size: 11px;
+    color: var(--ink-4);
+    cursor: pointer;
+    padding: 2px 4px;
+    border-radius: 2px;
+  }
+  .folder-manage-btn:hover { color: var(--oxide); background: var(--oxide-tint); }
+
+  .folder-modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9000;
+    background: rgba(0,0,0,0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .folder-modal-overlay.hidden { display: none; }
+  .folder-modal {
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 20px 24px;
+    min-width: 340px;
+    max-width: 440px;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+  }
+  .folder-modal h3 {
+    margin: 0 0 14px;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: 'Inter Tight', sans-serif;
+  }
+  .folder-modal-list {
+    list-style: none;
+    margin: 0 0 12px;
+    padding: 0;
+  }
+  .folder-modal-list li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 8px;
+    border-radius: 4px;
+    font-size: 13px;
+  }
+  .folder-modal-list li:hover { background: var(--paper-rib); }
+  .folder-modal-list .folder-name { flex: 1; }
+  .folder-modal-list .folder-cnt {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    color: var(--ink-4);
+    min-width: 20px;
+    text-align: right;
+  }
+  .folder-modal-list .folder-action {
+    font-size: 11px;
+    cursor: pointer;
+    color: var(--ink-4);
+    padding: 2px 4px;
+    border-radius: 2px;
+  }
+  .folder-modal-list .folder-action:hover { color: var(--oxide); background: var(--oxide-tint); }
+  .folder-add-row {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 14px;
+  }
+  .folder-add-row input {
+    flex: 1;
+    font-size: 12px;
+    padding: 4px 8px;
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    font-family: 'Inter Tight', sans-serif;
+  }
+  .folder-add-row input:focus { border-color: var(--oxide); outline: none; }
+  .folder-add-row button {
+    font-size: 12px;
+    padding: 4px 10px;
+    border: 1px solid var(--oxide);
+    border-radius: 3px;
+    background: var(--oxide);
+    color: #fff;
+    cursor: pointer;
+    font-family: 'Inter Tight', sans-serif;
+  }
+  .folder-add-row button:hover { background: var(--oxide-deep); }
+  .folder-modal-close {
+    float: right;
+    font-size: 18px;
+    cursor: pointer;
+    color: var(--ink-4);
+    line-height: 1;
+    padding: 2px 6px;
+  }
+  .folder-modal-close:hover { color: var(--ink); }
+  .folder-modal-footer {
+    display: flex;
+    gap: 8px;
+    padding-top: 10px;
+    border-top: 1px solid var(--rule);
+  }
+  .folder-modal-footer button {
+    font-size: 12px;
+    padding: 4px 12px;
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    background: var(--paper);
+    color: var(--ink-2);
+    cursor: pointer;
+    font-family: 'Inter Tight', sans-serif;
+  }
+  .folder-modal-footer button:hover { background: var(--paper-rib); }
+
+  /* Folder picker popover (on star button) */
+  .folder-picker {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    z-index: 500;
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+    padding: 6px 0;
+    min-width: 150px;
+    font-size: 12px;
+  }
+  .folder-picker.hidden { display: none; }
+  .folder-picker-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px;
+    cursor: pointer;
+    color: var(--ink-2);
+  }
+  .folder-picker-item:hover { background: var(--paper-rib); }
+  .folder-picker-item .fp-check {
+    width: 14px;
+    font-size: 12px;
+    color: var(--gold);
+  }
+  .folder-picker-sep {
+    height: 1px;
+    background: var(--rule);
+    margin: 4px 0;
+  }
+  .folder-picker-item.fp-new { color: var(--oxide); font-style: italic; }
+
+  /* Folder tags shown on cards */
+  .folder-tags {
+    display: inline-flex;
+    gap: 4px;
+    margin-left: 6px;
+    flex-wrap: wrap;
+  }
+  .folder-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    padding: 1px 5px;
+    border-radius: 2px;
+    background: var(--moss-tint);
+    color: var(--moss);
+    white-space: nowrap;
+  }
+
+  .fav-btn {
+    flex-shrink: 0;
+    background: none;
+    border: none;
+    padding: 0 2px;
+    margin: 0;
+    font-size: 18px;
+    line-height: 1;
+    color: var(--ink-4);
+    cursor: pointer;
+    transition: color 0.12s, transform 0.08s;
+    font-family: inherit;
+  }
+  .fav-btn:hover { color: var(--saffron); transform: scale(1.12); }
+  .fav-btn.is-fav { color: var(--gold); }
+  .fav-btn.is-fav:hover { color: var(--saffron); }
+  .conf-pill {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 9.5px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 2px 7px;
+    border-radius: 2px;
+    color: var(--ink-3);
+    background: var(--paper-deep);
+    border: 1px solid var(--rule);
+    flex-shrink: 0;
+  }
+
+  /* ---------- MAIN / LIST --------------------------------- */
+  main {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 24px 32px 80px;
+    position: relative;
+  }
+
+  /* Catalog entry — boxed card with numeric gutter + content. */
+  .card {
+    display: grid;
+    grid-template-columns: 48px 1fr;
+    column-gap: 16px;
+    row-gap: 3px;
+    padding: 10px 22px 14px 0;
+    margin-bottom: 10px;
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    background: var(--paper);
+    position: relative;
+    transition: border-color 120ms ease, box-shadow 120ms ease;
+  }
+  .card:hover {
+    border-color: var(--ink-4);
+    box-shadow: 0 1px 3px rgba(26,26,26,0.04);
+  }
+
+  /* Stable paper number — pulled from data-idx (set in JS at load time
+     using position in PAPERS array). Survives filter / pagination. */
+  .card::before {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+    content: attr(data-idx);
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 10.5px;
+    font-weight: 400;
+    color: var(--ink-4);
+    letter-spacing: 0.04em;
+    padding-top: 13px;
+    text-align: right;
+    user-select: none;
+    line-height: 1;
+    border-right: 1px solid var(--rule);
+    padding-right: 10px;
+    margin-left: 6px;
+    align-self: stretch;
+  }
+  #list { /* stable per-paper numbering — no counter reset needed */ }
+
+  /* Spotlight — vivid gold left edge + gold-tinted number in the gutter.
+     Number itself comes from data-idx (same as regular cards). */
+  .card.spotlight-card {
+    border-left: 3px solid var(--gold);
+  }
+  .card.spotlight-card:hover {
+    border-color: var(--ink-4);
+    border-left-color: var(--gold);
+  }
+  .card.spotlight-card::before {
+    color: var(--gold);
+    border-right-color: var(--gold);
+  }
+
+  .card-head {
+    grid-column: 2;
+    display: contents;
+  }
+  .badge {
+    display: inline-block;
+    min-width: 78px;
+    text-align: center;
+    font-family: 'JetBrains Mono', ui-monospace, "SF Mono", monospace;
+    font-size: 9.5px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    padding: 3px 12px 2px;
+    margin: 0;
+    flex-shrink: 0;
+    border-radius: 2px;
+    line-height: 1.4;
+    align-self: flex-start;
+    justify-self: start;
+  }
+  .badge.spotlight {
+    background: var(--saffron-tint);
+    color: var(--saffron);
+    box-shadow: inset 0 0 0 1px rgba(184, 134, 42, 0.25);
+  }
+  .badge.regular {
+    background: var(--slate-tint);
+    color: var(--slate-deep);
+    box-shadow: inset 0 0 0 1px rgba(42, 86, 128, 0.18);
+  }
+  /* Track-style badges for DBLP-sourced conferences (KDD / WWW).
+     All hues tuned to the same saturation/lightness as track-red (plum):
+     bg ≈ hsl(h, 22%, 90%), text ≈ hsl(h, 40-45%, 30%), shadow opacity 22%.
+     This keeps the palette consistent — the "weight" of each color is
+     visually equivalent. */
+  .badge.track-blue {
+    /* Azure — academic, the "primary" track color; bumped a notch
+       brighter than the baseline-keynote saturation. */
+    background: #d6e2ee;
+    color: #264b78;
+    box-shadow: inset 0 0 0 1px rgba(38, 75, 120, 0.24);
+  }
+  .badge.track-purple {
+    /* Violet — replaces the green slot for Industry / ADS. */
+    background: #e6deeb;
+    color: #523d76;
+    box-shadow: inset 0 0 0 1px rgba(82, 61, 118, 0.24);
+  }
+  .badge.track-amber {
+    /* Honey — warm but distinct from oxide keyword tags; bumped
+       brighter / more golden than the baseline. */
+    background: #f0dfb8;
+    color: #7e5e10;
+    box-shadow: inset 0 0 0 1px rgba(126, 94, 16, 0.24);
+  }
+  .badge.track-red {
+    /* Plum/wine — kept in the warm family but distinct from the oxide
+       red used by keyword chips (avoids visual confusion). Reference
+       saturation/lightness target for all the other track-* badges. */
+    background: #ecdee4;
+    color: #6e2a40;
+    box-shadow: inset 0 0 0 1px rgba(110, 42, 64, 0.22);
+  }
+  .badge.track-neutral {
+    /* Stone gray — quiet "default" for short papers etc. */
+    background: #e6e8ec;
+    color: #4d525a;
+    box-shadow: inset 0 0 0 1px rgba(77, 82, 90, 0.22);
+  }
+  .card-head > div[style*="flex"] {
+    grid-column: 2;
+    min-width: 0;
+  }
+  .card-head > .badge + div[style*="flex"] { margin-left: 0; }
+
+  /* Top row: badge on left + link buttons (ICML PAGE / OPENREVIEW / DBLP)
+     pushed to right edge of the card. */
+  .top-row {
+    grid-column: 2;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+  }
+  .top-right {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .top-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 12px;
+    align-items: center;
+  }
+
+  /* ---------- TITLE / AUTHORS / INST --------------------- */
+  /* Title — clean sans, not fancy. Slightly larger than body. */
+  .title {
+    font-family: 'Inter Tight', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 17px;
+    font-weight: 650;
+    line-height: 1.35;
+    letter-spacing: -0.012em;
+    color: var(--ink);
+    margin: 0;
+    text-wrap: balance;
+  }
+
+  .authors {
+    margin-top: 8px;
+    font-family: 'Inter Tight', sans-serif;
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--ink-2);
+    font-weight: 400;
+  }
+  .authors sup {
+    color: var(--oxide);
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-weight: 500;
+    font-size: 9px;
+    margin-left: 1px;
+    top: -0.35em;
+    position: relative;
+    line-height: 0;
+  }
+
+  .institutions {
+    margin-top: 2px;
+    font-family: 'Inter Tight', sans-serif;
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--ink-3);
+    font-style: italic;
+  }
+  .institutions .inst-num {
+    color: var(--oxide);
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-weight: 500;
+    font-style: normal;
+    font-size: 10px;
+    margin-right: 2px;
+  }
+  .institutions .inst-item {
+    margin-right: 14px;
+    display: inline-block;
+  }
+
+  /* ---------- LINKS / CHIPS ----------------------------- */
+  .links {
+    margin-top: 6px;
+    font-size: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px 10px;
+    align-items: center;
+  }
+  .links a,
+  .top-links a {
+    color: var(--oxide);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 10.5px;
+    padding: 1px 0;
+    border-bottom: 1px solid transparent;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition: border-color 100ms ease;
+  }
+  .links a::before,
+  .top-links a::before {
+    content: "↗ ";
+    font-weight: 400;
+    font-size: 11px;
+    color: var(--oxide);
+    margin-right: 1px;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+  .links a:hover,
+  .top-links a:hover { border-bottom-color: var(--oxide); }
+
+  /* Topic chip — moss-green, considered. */
+  .official-tag {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 10px;
+    font-weight: 500;
+    padding: 2px 10px 1px;
+    border-radius: 12px;
+    background: var(--moss-tint);
+    color: var(--moss);
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    border: 1px solid transparent;
+    transition: background-color 100ms ease, border-color 100ms ease;
+  }
+  .official-tag::before {
+    content: "▸ ";
+    color: var(--moss);
+    margin-right: 1px;
+  }
+  .official-tag:hover { background: var(--moss); color: var(--paper); }
+  .official-tag:hover::before { color: var(--paper); }
+
+  /* Keyword chip — italic marginalia, soft warm pink with a touch of red.
+     Same saturation/lightness target as the track badges (bg hsl(~8°,
+     22%, 92%), text hsl(~10°, 40%, 30%)). Quieter than the original
+     oxide-tint version but still carries red character. */
+  .kw-tag {
+    font-family: 'Fraunces', Georgia, serif;
+    font-style: italic;
+    font-size: 12px;
+    font-weight: 400;
+    padding: 1px 10px 2px;
+    border-radius: 12px;
+    background: #f2e3df;
+    color: #6e342b;
+    border: 1px solid #f2e3df;
+    cursor: pointer;
+    letter-spacing: 0.005em;
+    transition: background-color 100ms ease, border-color 100ms ease, color 100ms ease;
+  }
+  .kw-tag::before {
+    content: "#";
+    font-style: normal;
+    font-weight: 500;
+    margin-right: 1px;
+    opacity: 0.7;
+  }
+  .kw-tag:hover {
+    background: var(--oxide-tint);
+    border-color: var(--oxide);
+    color: var(--oxide-deep);
+  }
+  .kw-tag:hover::before { opacity: 1; }
+
+  /* ---------- ABSTRACT --------------------------------- */
+  /* Abstract body — readable serif at body size. Kept Fraunces since
+     this is body text, not a title. */
+  .abstract {
+    display: none;
+    margin-top: 11px;
+    padding: 12px 16px 12px 18px;
+    background: var(--paper-deep);
+    border-left: 2px solid var(--oxide);
+    border-radius: 0;
+    font-family: 'Fraunces', 'Iowan Old Style', Georgia, serif;
+    font-optical-sizing: auto;
+    font-variation-settings: "SOFT" 20, "opsz" 14;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--ink-2);
+    white-space: pre-wrap;
+    text-wrap: pretty;
+    hyphens: auto;
+  }
+  .abstract.open { display: block; }
+
+  .toggle-abs {
+    font-family: 'Inter Tight', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--ink-3);
+    cursor: pointer;
+    user-select: none;
+    margin-left: 4px;
+    padding: 1px 6px;
+    border: 1px solid var(--rule);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    transition: color 100ms ease, border-color 100ms ease;
+  }
+  .toggle-abs:hover { color: var(--oxide); border-color: var(--oxide); }
+
+  .more-authors {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 12.5px;
+    color: var(--oxide);
+    cursor: pointer;
+    user-select: none;
+    font-weight: 400;
+  }
+  .more-authors:hover { text-decoration: underline; }
+
+  /* Search highlight — saffron, fountain-pen underline. */
+  mark {
+    background: var(--highlight);
+    color: var(--ink);
+    padding: 0 2px;
+    border-radius: 0;
+    box-shadow: 0 -1px 0 var(--highlight) inset, 0 -3px 0 rgba(184,134,42,.35) inset;
+  }
+
+  /* MathJax MUST stay inline. */
+  mjx-container { display: inline !important; }
+  .abstract mjx-container { font-size: 0.98em; }
+
+  /* ---------- PAGINATION ------------------------------- */
+  .pagination {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    margin-top: 28px;
+    padding-top: 16px;
+    border-top: 1px solid var(--rule);
+    align-items: center;
+    flex-wrap: wrap;
+    font-family: 'Inter Tight', sans-serif;
+  }
+  .pagination button {
+    padding: 5px 12px;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    font-family: 'Inter Tight', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ink-2);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    border-bottom: 1px solid transparent;
+    transition: color 100ms ease, border-color 100ms ease;
+  }
+  .pagination button:not(:disabled):hover {
+    color: var(--oxide);
+    border-bottom-color: var(--oxide);
+  }
+  .pagination button:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+  .pagination .info {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 11px;
+    color: var(--ink-3);
+    padding: 0 14px;
+    letter-spacing: 0.04em;
+  }
+
+  /* ---------- MISC STATES ------------------------------ */
+  .empty {
+    text-align: center;
+    padding: 80px 20px;
+    color: var(--ink-3);
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 15px;
+  }
+  .empty::before {
+    content: "—";
+    display: block;
+    color: var(--oxide);
+    font-size: 22px;
+    margin-bottom: 12px;
+    font-style: normal;
+  }
+
+  #loading {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--ink-3);
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 14px;
+  }
+  #render-progress {
+    text-align: center;
+    padding: 22px;
+    color: var(--ink-3);
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    display: none;
+  }
+
+  .hidden { display: none !important; }
+
+  /* ---------- RESPONSIVE ------------------------------- */
+  @media (max-width: 780px) {
+    header { padding: 12px 18px 8px; }
+    main { padding: 18px 18px 60px; }
+    h1 { font-size: 17px; gap: 10px; }
+    .card { grid-template-columns: 34px 1fr; column-gap: 10px; --row-pad: 13px; }
+    .card::before { font-size: 9.5px; padding-right: 8px; }
+    .title { font-size: 14.5px; }
+    input[type=text] { min-width: 200px; }
+  }
+
+  /* Focus rings — uniform, oxide. */
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  .tab:focus-visible,
+  .toggle-abs:focus-visible,
+  .kw-tag:focus-visible,
+  .official-tag:focus-visible,
+  .reset:focus-visible,
+  .back-btn:focus-visible,
+  .more-authors:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+</style>
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true,
+    processEnvironments: true
+  },
+  options: {
+    skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+    ignoreHtmlClass: 'no-mathjax'
+  },
+  startup: { typeset: false }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+</head>
+<body>
+<header>
+  <h1>
+    <select class="conf-select" id="conf-select"></select>
+    <span id="conf-title">Paper List</span>
+    <span class="conf-count" id="conf-count"></span>
+  </h1>
+  <div class="row">
+    <div class="tabs" id="tabs"></div>
+    <input type="text" id="search" placeholder="Search title, abstract, author, institution…">
+    <label id="search-abs-label"><input type="checkbox" id="search-abs" checked> Search abstracts</label>
+    <label id="search-authors-label"><input type="checkbox" id="search-authors" checked> Search authors / inst.</label>
+    <label class="fav-only-label" id="fav-only-label"><input type="checkbox" id="fav-only"> ★ Favorites only <span class="count" id="fav-count">0</span></label>
+    <select class="folder-select hidden" id="folder-select"><option value="">All folders</option></select>
+    <span class="folder-manage-btn" id="folder-manage-btn" title="Manage folders">⚙ Folders</span>
+  </div>
+  <div class="row" id="track-tabs-row">
+    <div class="tabs track-tabs" id="track-tabs"></div>
+  </div>
+  <div class="row">
+    <span class="filter-label" id="kw-label">Keyword tag</span>
+    <select id="kw-topic"><option value="">All keyword tags</option></select>
+    <span class="filter-label" id="official-label">Official topic</span>
+    <select id="official-topic"><option value="">All official topics</option></select>
+    <span class="filter-label">Per page</span>
+    <select id="page-size">
+      <option value="25">25</option>
+      <option value="50" selected>50</option>
+      <option value="100">100</option>
+      <option value="200">200</option>
+      <option value="500">500</option>
+      <option value="1000">1000</option>
+      <option value="-1">All (slow)</option>
+    </select>
+    <span class="warn" id="size-warn">⚠ Rendering may take a few seconds</span>
+    <span class="back-btn" id="back-btn">‹ Back</span>
+    <span class="reset" id="reset">× Reset filters</span>
+    <span class="fav-tool" id="fav-save" title="One-click save: POST current favorites to scripts/serve.py, which overwrites favorites.js directly. Requires the server running and the page loaded over http://localhost.">⤓ Save</span>
+    <span class="fav-tool" id="fav-export" title="Download current favorites as favorites.js — replace the file in the repo to sync via Git">★ Export</span>
+    <span class="fav-tool" id="fav-reload" title="Discard local favorites and reload from favorites.js (the committed state)">↻ Reload</span>
+    <div class="stats" id="stats"></div>
+  </div>
+</header>
+<main>
+  <div id="loading">Loading papers…</div>
+  <div id="render-progress">Rendering…</div>
+  <div id="list"></div>
+  <div class="pagination" id="pagination"></div>
+</main>
+<div class="folder-modal-overlay hidden" id="folder-modal-overlay">
+  <div class="folder-modal">
+    <span class="folder-modal-close" id="folder-modal-close">&times;</span>
+    <h3>Manage Folders</h3>
+    <div class="folder-add-row">
+      <input type="text" id="folder-new-name" placeholder="New folder name…">
+      <button id="folder-add-btn">Add</button>
+    </div>
+    <ul class="folder-modal-list" id="folder-modal-list"></ul>
+    <div class="folder-modal-footer">
+      <button id="folder-export-btn">Export current folder</button>
+      <button id="folder-export-all-btn">Export all folders</button>
+    </div>
+  </div>
+</div>
+<script id="data" type="application/json">{{CONF_JSON}}</script>
+<script id="index-data" type="application/json">{{INDEX_JSON}}</script>
+<!-- Bootstrap: inline copy of favorites.js as it existed at build time.
+     Guarantees window.FAVORITES_SYNCED is set even when file:// blocks the
+     external load. The external <script src> below then overwrites with the
+     freshest disk state when served from an HTTP origin (or when the
+     browser permits cross-file:// script tags). -->
+<script>{{FAVORITES_INLINE}}</script>
+<script src="../favorites.js"></script>
+<script>
+const CONF = JSON.parse(document.getElementById('data').textContent);
+const INDEX = JSON.parse(document.getElementById('index-data').textContent);
+const PAPERS = CONF.papers || [];
+
+// Stable per-paper index (1-based).
+// Survives filtering / pagination / sorting — paper #437 always renders as #437.
+PAPERS.forEach((p, i) => { p._idx = String(i + 1); });
+const FIELDS = new Set(CONF.fields_present || []);
+const DESIGNATIONS = CONF.designations || null;  // null => no tab filter
+const BADGES = CONF.badges || null;              // optional: separate from tabs (e.g. KDD cycles)
+const TOPIC_FIELD = CONF.topic_field || null;
+const KW_FIELD = CONF.keyword_field || null;
+const LINKS_CFG = CONF.links || [];
+
+const HAS_ABSTRACT = FIELDS.has('a');
+const HAS_AUTHORS = FIELDS.has('au');
+const HAS_INST = FIELDS.has('ins');
+const HAS_DESIGNATION = !!(DESIGNATIONS && DESIGNATIONS.tabs && DESIGNATIONS.tabs.length);
+const HAS_KEYWORDS = !!(KW_FIELD && FIELDS.has(KW_FIELD));
+const HAS_TOPIC = !!(TOPIC_FIELD && FIELDS.has(TOPIC_FIELD));
+
+// ---- Header setup -------------------------------------------------------
+document.title = `${CONF.name || 'Papers'} — Paper List`;
+document.getElementById('conf-title').textContent = `${CONF.name || ''} Paper List`.trim();
+document.getElementById('conf-count').textContent = `(${PAPERS.length} papers)`;
+
+const $confSelect = document.getElementById('conf-select');
+const indexList = (INDEX && INDEX.conferences) || [];
+if (indexList.length > 0) {
+  for (const e of indexList) {
+    const opt = document.createElement('option');
+    opt.value = e.browser_path;
+    opt.textContent = `${e.name} (${e.paper_count})`;
+    if (e.id === CONF.id) opt.selected = true;
+    $confSelect.appendChild(opt);
+  }
+  // Cross-conference favorites view (generated by build_browser.py --favorites).
+  const favOpt = document.createElement('option');
+  favOpt.value = 'browsers/favorites.html';
+  favOpt.textContent = '★ Favorites';
+  if (CONF.is_favorites_view) favOpt.selected = true;
+  $confSelect.appendChild(favOpt);
+  $confSelect.addEventListener('change', () => {
+    if ($confSelect.value) {
+      // Navigate relative to the current browsers/ folder.
+      // Strip the "browsers/" prefix since we are already inside it.
+      const path = $confSelect.value.replace(/^browsers\//, '');
+      window.location.href = path;
+    }
+  });
+} else {
+  $confSelect.style.display = 'none';
+}
+
+// ---- Tab construction ---------------------------------------------------
+const $tabs = document.getElementById('tabs');
+if (HAS_DESIGNATION) {
+  const allTab = document.createElement('div');
+  allTab.className = 'tab active';
+  allTab.dataset.filter = 'all';
+  allTab.innerHTML = `All <span class="count" id="cnt-all">0</span>`;
+  $tabs.appendChild(allTab);
+  for (const t of DESIGNATIONS.tabs) {
+    const tab = document.createElement('div');
+    tab.className = 'tab';
+    tab.dataset.filter = t.key;
+    tab.innerHTML = `${escapeHtml(t.label)} <span class="count" id="cnt-${t.key}">0</span>`;
+    $tabs.appendChild(tab);
+  }
+}
+
+// Field-presence-driven UI hiding.
+if (!HAS_ABSTRACT) {
+  document.getElementById('search-abs-label').classList.add('hidden');
+}
+if (!HAS_AUTHORS && !HAS_INST) {
+  document.getElementById('search-authors-label').classList.add('hidden');
+}
+if (!HAS_KEYWORDS) {
+  document.getElementById('kw-label').classList.add('hidden');
+  document.getElementById('kw-topic').classList.add('hidden');
+}
+if (!HAS_TOPIC) {
+  document.getElementById('official-label').classList.add('hidden');
+  document.getElementById('official-topic').classList.add('hidden');
+}
+const $trackTabs = document.getElementById('track-tabs');
+const $trackTabsRow = document.getElementById('track-tabs-row');
+const HAS_TRACK_FILTER = !!(BADGES && BADGES.field && Array.isArray(BADGES.items) && BADGES.items.length);
+if (!HAS_TRACK_FILTER) {
+  $trackTabsRow.classList.add('hidden');
+} else {
+  // Build a second row of tabs for the track dimension — same UX as the
+  // top-level cycle tabs, just one row lower.
+  const trackCounts = {};
+  for (const p of PAPERS) {
+    const v = p[BADGES.field];
+    if (v) trackCounts[v] = (trackCounts[v] || 0) + 1;
+  }
+  const allTab = document.createElement('div');
+  allTab.className = 'tab active';
+  allTab.dataset.trackFilter = '';
+  allTab.innerHTML = `All <span class="count">${PAPERS.length}</span>`;
+  $trackTabs.appendChild(allTab);
+  for (const item of BADGES.items) {
+    if (!trackCounts[item.key]) continue;
+    const tab = document.createElement('div');
+    tab.className = 'tab';
+    tab.dataset.trackFilter = item.key;
+    tab.innerHTML = `${item.text} <span class="count">${trackCounts[item.key]}</span>`;
+    $trackTabs.appendChild(tab);
+  }
+  $trackTabs.addEventListener('click', e => {
+    const t = e.target.closest('.tab');
+    if (!t) return;
+    $trackTabs.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+    t.classList.add('active');
+    currentTrack = t.dataset.trackFilter;
+    currentPage = 1;
+    applyFilter(true);
+  });
+}
+
+// ---- State --------------------------------------------------------------
+const AUTHOR_PREVIEW_LIMIT = 8;
+const IS_FAVORITES_VIEW = !!CONF.is_favorites_view;
+const FAV_KEY = 'paper-list-favorites:v1';
+let pageSize = 50;
+let currentFilter = 'all';
+let currentKwTopic = '';
+let currentOfficialTopic = '';
+let currentTrack = '';  // only used when BADGES is configured (e.g. KDD)
+let currentQuery = '';
+let searchInAbstract = HAS_ABSTRACT;
+let searchInAuthors = HAS_AUTHORS || HAS_INST;
+let currentPage = 1;
+let filtered = PAPERS;
+let historyDepth = 0;
+let favorites = loadFavorites();
+// In the merged favorites view, "favorites only" is forced ON (that's the
+// point of the view); the toggle is hidden. In a per-conf view, it starts
+// OFF — user opts in.
+let favoritesOnly = IS_FAVORITES_VIEW;
+
+const $list = document.getElementById('list');
+const $stats = document.getElementById('stats');
+const $pagination = document.getElementById('pagination');
+const $loading = document.getElementById('loading');
+const $renderProgress = document.getElementById('render-progress');
+const $search = document.getElementById('search');
+const $searchAbs = document.getElementById('search-abs');
+const $searchAuth = document.getElementById('search-authors');
+const $kwTopic = document.getElementById('kw-topic');
+const $officialTopic = document.getElementById('official-topic');
+const $pageSize = document.getElementById('page-size');
+const $sizeWarn = document.getElementById('size-warn');
+const $backBtn = document.getElementById('back-btn');
+const $favOnly = document.getElementById('fav-only');
+const $favOnlyLabel = document.getElementById('fav-only-label');
+const $favCount = document.getElementById('fav-count');
+const $favExport = document.getElementById('fav-export');
+const $favReload = document.getElementById('fav-reload');
+const $favSave = document.getElementById('fav-save');
+
+// ---- Counts -------------------------------------------------------------
+if (HAS_DESIGNATION) {
+  const cntAll = document.getElementById('cnt-all');
+  if (cntAll) cntAll.textContent = PAPERS.length;
+  for (const t of DESIGNATIONS.tabs) {
+    const el = document.getElementById('cnt-' + t.key);
+    if (el) el.textContent = PAPERS.filter(p => p[DESIGNATIONS.field] === t.key).length;
+  }
+}
+
+// ---- Keyword tag dropdown ----------------------------------------------
+if (HAS_KEYWORDS) {
+  const kwCount = {};
+  PAPERS.forEach(p => {
+    const tags = p[KW_FIELD];
+    if (Array.isArray(tags)) tags.forEach(t => { kwCount[t] = (kwCount[t]||0)+1; });
+  });
+  for (const [t, c] of Object.entries(kwCount).sort((a,b) => b[1]-a[1])) {
+    const opt = document.createElement('option');
+    opt.value = t;
+    opt.textContent = `${t} (${c})`;
+    $kwTopic.appendChild(opt);
+  }
+}
+
+// ---- Official topic dropdown -------------------------------------------
+if (HAS_TOPIC) {
+  const officialMap = {};
+  let untaggedCount = 0;
+  PAPERS.forEach(p => {
+    const v = p[TOPIC_FIELD];
+    if (v) {
+      officialMap[v] = (officialMap[v]||0)+1;
+    } else {
+      untaggedCount++;
+    }
+  });
+  // Split topics into grouped (with Primary->Sub) and bare (top-level).
+  // Bare topics render as flat <option>s after the optgroups.
+  const grouped = {};
+  const bareTopics = [];
+  for (const [topic, count] of Object.entries(officialMap)) {
+    if (topic.includes('->')) {
+      const [primary, sub] = topic.split('->');
+      if (!grouped[primary]) grouped[primary] = [];
+      grouped[primary].push([topic, sub, count]);
+    } else {
+      bareTopics.push([topic, topic, count]);
+    }
+  }
+  const primaryOrder = Object.entries(grouped).map(([p, items]) => [p, items.reduce((a,b)=>a+b[2], 0)]).sort((a,b)=>b[1]-a[1]);
+  for (const [primary, _] of primaryOrder) {
+    const og = document.createElement('optgroup');
+    og.label = primary;
+    grouped[primary].sort((a,b) => a[1].localeCompare(b[1], undefined, {numeric: true})).forEach(([fullTopic, sub, count]) => {
+      const opt = document.createElement('option');
+      opt.value = fullTopic;
+      opt.textContent = `  ${sub} (${count})`;
+      og.appendChild(opt);
+    });
+    $officialTopic.appendChild(og);
+  }
+  bareTopics.sort((a,b) => a[1].localeCompare(b[1], undefined, {numeric: true})).forEach(([fullTopic, sub, count]) => {
+    const opt = document.createElement('option');
+    opt.value = fullTopic;
+    opt.textContent = `${sub} (${count})`;
+    opt.className = 'top-level';
+    $officialTopic.appendChild(opt);
+  });
+  if (untaggedCount > 0) {
+    const unOpt = document.createElement('option');
+    unOpt.value = '__UNCLASSIFIED__';
+    unOpt.textContent = `(Unclassified) (${untaggedCount})`;
+    $officialTopic.appendChild(unOpt);
+  }
+}
+
+// ---- Helpers ------------------------------------------------------------
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function escapeRegex(s) {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+function processTextMacros(s) {
+  return s
+    .replace(/\\textbf\{([^{}]+)\}/g, '<strong>$1</strong>')
+    .replace(/\\textit\{([^{}]+)\}/g, '<em>$1</em>')
+    .replace(/\\emph\{([^{}]+)\}/g, '<em>$1</em>')
+    .replace(/\\texttt\{([^{}]+)\}/g, '<code>$1</code>')
+    .replace(/\\url\{([^{}]+)\}/g, '$1');
+}
+function highlightWithMath(text, q) {
+  let escaped = escapeHtml(text);
+  escaped = processTextMacros(escaped);
+  if (!q) return escaped;
+  let re;
+  try { re = new RegExp('(' + escapeRegex(q) + ')', 'gi'); }
+  catch (e) { return escaped; }
+  const parts = escaped.split(/(\$\$[\s\S]*?\$\$|\$[^$\n]*\$)/g);
+  return parts.map((part, i) => {
+    if (i % 2 === 1) return part;
+    return part.replace(re, '<mark>$1</mark>');
+  }).join('');
+}
+function authorHtml(authorEntry, q) {
+  const name = highlightWithMath(authorEntry[0] || '', q);
+  const idx = authorEntry[1];
+  if (idx === null || idx === undefined) return name;
+  // idx can be a single int (single affiliation) or an array of ints
+  // (multi-affiliation, e.g. visiting researcher). Render as e.g. "Name²,³".
+  if (Array.isArray(idx)) {
+    if (idx.length === 0) return name;
+    return `${name}<sup>${idx.map(i => i + 1).join(',')}</sup>`;
+  }
+  return `${name}<sup>${idx+1}</sup>`;
+}
+function formatLinkUrl(template, paper) {
+  return template.replace(/\{(\w+)\}/g, (_m, k) => {
+    const v = paper[k];
+    return v == null ? '' : String(v);
+  });
+}
+function designationFor(paper) {
+  if (!HAS_DESIGNATION) return null;
+  const val = paper[DESIGNATIONS.field];
+  return DESIGNATIONS.tabs.find(t => t.key === val) || null;
+}
+function badgeFor(paper) {
+  // Dedicated badge config (e.g. KDD where tabs filter by cycle, badge
+  // shows track). Returns {badge_class, badge_text, card_class}.
+  if (BADGES && BADGES.field && Array.isArray(BADGES.items)) {
+    const val = paper[BADGES.field];
+    const item = BADGES.items.find(b => b.key === val);
+    if (!item) return null;
+    return {
+      badge_class: item.class || '',
+      badge_text: item.text || '',
+      card_class: item.card_class || '',
+    };
+  }
+  // Fallback: badge mirrors the designation (ICML / WWW).
+  return designationFor(paper);
+}
+
+// ---- Favorites ---------------------------------------------------------
+// Storage model:
+//   localStorage["paper-list-favorites:v1"] = JSON of {conf_id: [paper_id, ...]}
+// On first load (or after Reload), bootstrap from window.FAVORITES_SYNCED
+// (loaded from ../favorites.js, committed in repo). Export writes a fresh
+// favorites.js that the user can drop in to overwrite the synced state.
+function loadFavorites() {
+  try {
+    const stored = localStorage.getItem(FAV_KEY);
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      if (parsed && typeof parsed === 'object') return parsed;
+    }
+  } catch (e) {}
+  const synced = (window.FAVORITES_SYNCED || {});
+  const fresh = {};
+  for (const k of Object.keys(synced)) {
+    if (k === 'version' || k === '_folders') continue;
+    if (Array.isArray(synced[k])) fresh[k] = synced[k].slice();
+  }
+  try { localStorage.setItem(FAV_KEY, JSON.stringify(fresh)); } catch (e) {}
+  return fresh;
+}
+function saveFavorites() {
+  try { localStorage.setItem(FAV_KEY, JSON.stringify(favorites)); } catch (e) {}
+}
+function isFav(confId, paperId) {
+  // Coerce to string: ICML paper IDs are integers in JSON, KDD/WWW are
+  // strings (DBLP keys). data-id round-trips through the DOM as a string,
+  // so the canonical storage form is string — coerce here to avoid an
+  // int-vs-string mismatch silently returning false.
+  if (!confId || !favorites[confId]) return false;
+  return favorites[confId].indexOf(String(paperId)) >= 0;
+}
+function toggleFav(confId, paperId) {
+  const id = String(paperId);
+  if (!favorites[confId]) favorites[confId] = [];
+  const arr = favorites[confId];
+  const i = arr.indexOf(id);
+  if (i >= 0) arr.splice(i, 1);
+  else arr.push(id);
+  saveFavorites();
+  updateFavCount();
+  return i < 0;
+}
+function favsForCurrent() {
+  if (IS_FAVORITES_VIEW) {
+    let n = 0;
+    for (const k of Object.keys(favorites)) {
+      if (Array.isArray(favorites[k])) n += favorites[k].length;
+    }
+    return n;
+  }
+  return (favorites[CONF.id] || []).length;
+}
+function updateFavCount() {
+  const n = favsForCurrent();
+  if ($favCount) $favCount.textContent = n;
+  if (IS_FAVORITES_VIEW) {
+    const el = document.getElementById('conf-count');
+    if (el) el.textContent = `(${n} starred)`;
+  }
+}
+function buildFavoritesContent() {
+  const out = {version: 2};
+  const synced = (window.FAVORITES_SYNCED || {});
+  const seen = new Set();
+  for (const k of Object.keys(synced)) {
+    if (k === 'version' || k === '_folders') continue;
+    if (Array.isArray(synced[k])) { out[k] = (favorites[k] || []).slice().sort(); seen.add(k); }
+  }
+  for (const k of Object.keys(favorites)) {
+    if (seen.has(k)) continue;
+    if (Array.isArray(favorites[k])) out[k] = favorites[k].slice().sort();
+  }
+  out._folders = folderData;
+  return '// Persistent favorites — committed to the repo as the synced source of truth.\n'
+    + '// Each browser bootstraps localStorage from this file on first load. Use the\n'
+    + '// "Export" button in any browser to overwrite this file with your current\n'
+    + '// localStorage state, then commit + push to sync across machines.\n'
+    + '//\n'
+    + '// Hand-editing is fine: keep the structure {conf_id: [paper_id, ...]}.\n'
+    + '// _folders contains folder assignments (managed via the Folders UI).\n'
+    + 'window.FAVORITES_SYNCED = ' + JSON.stringify(out, null, 2) + ';\n';
+}
+function exportFavorites() {
+  const blob = new Blob([buildFavoritesContent()], {type: 'application/javascript'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'favorites.js';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+function isLocalhostHost() {
+  const h = location.hostname;
+  return h === 'localhost' || h === '127.0.0.1' || h === '::1';
+}
+async function saveFavoritesToRepo() {
+  // Save writes the repo's favorites.js directly. Only possible when the
+  // page is served by our scripts/serve.py running on this machine.
+  if (location.protocol === 'file:') {
+    alert('Save needs the page loaded over http://localhost.\n\nRun:\n  python scripts/serve.py\n\nThen open http://localhost:8000/ and try Save again.\n\n(Or use Export to download the file.)');
+    return;
+  }
+  if (!isLocalhostHost()) {
+    alert(`Save writes the repo's favorites.js directly — only possible when scripts/serve.py is running on this machine.\n\nYou are on ${location.host}, which is a remote/static host. Use Export to download favorites.js, then commit + push it locally.`);
+    return;
+  }
+  const content = buildFavoritesContent();
+  const endpoint = '/save-favorites';
+  const orig = $favSave ? $favSave.textContent : '';
+  if ($favSave) { $favSave.textContent = '… Saving'; $favSave.style.pointerEvents = 'none'; }
+  try {
+    const r = await fetch(endpoint, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/javascript'},
+      body: content,
+    });
+    if (r.status === 405 || r.status === 501) {
+      throw new Error('The server at ' + location.host + " doesn't expose /save-favorites.\n\nMake sure you started `python scripts/serve.py` (not `python -m http.server`).");
+    }
+    if (!r.ok) throw new Error(`HTTP ${r.status} ${r.statusText}`);
+    // Refresh the in-memory synced snapshot to match what we just wrote.
+    // Build it directly from `favorites` rather than parsing `content` —
+    // the file's comments contain a literal "{conf_id: [paper_id, ...]}"
+    // that broke a naïve JSON.parse of the whole text.
+    const newSynced = {version: 2};
+    for (const k of Object.keys(favorites)) {
+      if (k === 'version' || k === '_folders') continue;
+      if (Array.isArray(favorites[k])) newSynced[k] = favorites[k].slice();
+    }
+    newSynced._folders = folderData;
+    window.FAVORITES_SYNCED = newSynced;
+    if ($favSave) {
+      $favSave.textContent = '✓ Saved';
+      setTimeout(() => { $favSave.textContent = orig; $favSave.style.pointerEvents = ''; }, 1500);
+    }
+  } catch (e) {
+    if ($favSave) { $favSave.textContent = orig; $favSave.style.pointerEvents = ''; }
+    alert('Save failed.\n\n' + e.message);
+  }
+}
+function reloadFavoritesFromFile() {
+  const synced = (window.FAVORITES_SYNCED || {});
+  const fresh = {};
+  for (const k of Object.keys(synced)) {
+    if (k === 'version' || k === '_folders') continue;
+    if (Array.isArray(synced[k])) fresh[k] = synced[k].slice();
+  }
+  favorites = fresh;
+  saveFavorites();
+  if (synced._folders && synced._folders.folders) {
+    folderData = { folders: synced._folders.folders.slice(), assignments: {} };
+    for (const k of Object.keys(synced._folders.assignments || {})) {
+      folderData.assignments[k] = {};
+      for (const pid of Object.keys(synced._folders.assignments[k])) {
+        folderData.assignments[k][pid] = synced._folders.assignments[k][pid].slice();
+      }
+    }
+    saveFolderData();
+    refreshFolderUI();
+  }
+}
+function paperConfId(p) {
+  // In the merged favorites view each paper carries `_conf`; per-conf
+  // views use the wrapper id.
+  return p._conf || CONF.id;
+}
+
+// ---- Folders ------------------------------------------------------------
+const FOLDERS_KEY = 'paper-list-folders:v1';
+const $folderSelect = document.getElementById('folder-select');
+const $folderManageBtn = document.getElementById('folder-manage-btn');
+const $folderModalOverlay = document.getElementById('folder-modal-overlay');
+const $folderModalClose = document.getElementById('folder-modal-close');
+const $folderModalList = document.getElementById('folder-modal-list');
+const $folderNewName = document.getElementById('folder-new-name');
+const $folderAddBtn = document.getElementById('folder-add-btn');
+const $folderExportBtn = document.getElementById('folder-export-btn');
+const $folderExportAllBtn = document.getElementById('folder-export-all-btn');
+
+let currentFolder = '';
+
+function loadFolders() {
+  try {
+    const stored = localStorage.getItem(FOLDERS_KEY);
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      if (parsed && parsed.folders) return parsed;
+    }
+  } catch (e) {}
+  const synced = (window.FAVORITES_SYNCED || {})._folders;
+  if (synced && synced.folders) {
+    const fresh = { folders: synced.folders.slice(), assignments: {} };
+    for (const k of Object.keys(synced.assignments || {})) {
+      fresh.assignments[k] = {};
+      for (const pid of Object.keys(synced.assignments[k])) {
+        fresh.assignments[k][pid] = synced.assignments[k][pid].slice();
+      }
+    }
+    try { localStorage.setItem(FOLDERS_KEY, JSON.stringify(fresh)); } catch (e) {}
+    return fresh;
+  }
+  return { folders: [], assignments: {} };
+}
+function saveFolderData() {
+  try { localStorage.setItem(FOLDERS_KEY, JSON.stringify(folderData)); } catch (e) {}
+}
+let folderData = loadFolders();
+
+function getFolderAssignments(confId, paperId) {
+  const id = String(paperId);
+  const confMap = folderData.assignments[confId];
+  if (!confMap) return [];
+  return confMap[id] || [];
+}
+function setFolderAssignment(confId, paperId, folderName, add) {
+  const id = String(paperId);
+  if (!folderData.assignments[confId]) folderData.assignments[confId] = {};
+  const confMap = folderData.assignments[confId];
+  if (!confMap[id]) confMap[id] = [];
+  const arr = confMap[id];
+  const idx = arr.indexOf(folderName);
+  if (add && idx < 0) arr.push(folderName);
+  if (!add && idx >= 0) arr.splice(idx, 1);
+  if (arr.length === 0) delete confMap[id];
+  saveFolderData();
+}
+function createFolder(name) {
+  const trimmed = name.trim();
+  if (!trimmed || folderData.folders.includes(trimmed)) return false;
+  folderData.folders.push(trimmed);
+  saveFolderData();
+  refreshFolderUI();
+  return true;
+}
+function renameFolder(oldName, newName) {
+  const trimmed = newName.trim();
+  if (!trimmed || folderData.folders.includes(trimmed)) return false;
+  const idx = folderData.folders.indexOf(oldName);
+  if (idx < 0) return false;
+  folderData.folders[idx] = trimmed;
+  for (const confId of Object.keys(folderData.assignments)) {
+    const confMap = folderData.assignments[confId];
+    for (const pid of Object.keys(confMap)) {
+      const i = confMap[pid].indexOf(oldName);
+      if (i >= 0) confMap[pid][i] = trimmed;
+    }
+  }
+  if (currentFolder === oldName) currentFolder = trimmed;
+  saveFolderData();
+  refreshFolderUI();
+  return true;
+}
+function deleteFolder(name) {
+  const idx = folderData.folders.indexOf(name);
+  if (idx < 0) return;
+  folderData.folders.splice(idx, 1);
+  for (const confId of Object.keys(folderData.assignments)) {
+    const confMap = folderData.assignments[confId];
+    for (const pid of Object.keys(confMap)) {
+      const i = confMap[pid].indexOf(name);
+      if (i >= 0) confMap[pid].splice(i, 1);
+      if (confMap[pid].length === 0) delete confMap[pid];
+    }
+  }
+  if (currentFolder === name) currentFolder = '';
+  saveFolderData();
+  refreshFolderUI();
+}
+function countPapersInFolder(folderName) {
+  let count = 0;
+  for (const confId of Object.keys(folderData.assignments)) {
+    const confMap = folderData.assignments[confId];
+    for (const pid of Object.keys(confMap)) {
+      if (confMap[pid].includes(folderName)) count++;
+    }
+  }
+  return count;
+}
+function isInFolder(confId, paperId, folderName) {
+  return getFolderAssignments(confId, paperId).includes(folderName);
+}
+
+function refreshFolderUI() {
+  const val = currentFolder;
+  $folderSelect.innerHTML = '<option value="">All folders</option>';
+  for (const f of folderData.folders) {
+    const opt = document.createElement('option');
+    opt.value = f;
+    opt.textContent = f;
+    if (f === val) opt.selected = true;
+    $folderSelect.appendChild(opt);
+  }
+  $folderSelect.classList.toggle('hidden', folderData.folders.length === 0);
+}
+function refreshFolderModal() {
+  $folderModalList.innerHTML = '';
+  for (const f of folderData.folders) {
+    const li = document.createElement('li');
+    const cnt = countPapersInFolder(f);
+    li.innerHTML = `<span class="folder-name">${escapeHtml(f)}</span>`
+      + `<span class="folder-cnt">${cnt}</span>`
+      + `<span class="folder-action" data-action="rename" data-folder="${escapeHtml(f)}" title="Rename">✎</span>`
+      + `<span class="folder-action" data-action="delete" data-folder="${escapeHtml(f)}" title="Delete">✕</span>`;
+    $folderModalList.appendChild(li);
+  }
+  if (folderData.folders.length === 0) {
+    $folderModalList.innerHTML = '<li style="color:var(--ink-4);font-style:italic">No folders yet — create one above.</li>';
+  }
+}
+function openFolderModal() {
+  refreshFolderModal();
+  $folderModalOverlay.classList.remove('hidden');
+  $folderNewName.focus();
+}
+function closeFolderModal() {
+  $folderModalOverlay.classList.add('hidden');
+}
+function buildFolderPicker(confId, paperId, anchorEl) {
+  let existing = anchorEl.closest('.card')?.querySelector('.folder-picker');
+  if (existing) { existing.remove(); return; }
+  document.querySelectorAll('.folder-picker').forEach(el => el.remove());
+
+  if (folderData.folders.length === 0) {
+    openFolderModal();
+    return;
+  }
+  const picker = document.createElement('div');
+  picker.className = 'folder-picker';
+  const assigned = getFolderAssignments(confId, paperId);
+  for (const f of folderData.folders) {
+    const inFolder = assigned.includes(f);
+    const item = document.createElement('div');
+    item.className = 'folder-picker-item';
+    item.innerHTML = `<span class="fp-check">${inFolder ? '★' : ''}</span><span>${escapeHtml(f)}</span>`;
+    item.addEventListener('click', () => {
+      const wasIn = getFolderAssignments(confId, paperId).includes(f);
+      setFolderAssignment(confId, paperId, f, !wasIn);
+      item.querySelector('.fp-check').textContent = wasIn ? '' : '★';
+      updateCardFolderTags(confId, paperId);
+      if (currentFolder && favoritesOnly) applyFilter(false);
+    });
+    picker.appendChild(item);
+  }
+  const sep = document.createElement('div');
+  sep.className = 'folder-picker-sep';
+  picker.appendChild(sep);
+  const newItem = document.createElement('div');
+  newItem.className = 'folder-picker-item fp-new';
+  newItem.textContent = '+ New folder…';
+  newItem.addEventListener('click', () => { picker.remove(); openFolderModal(); });
+  picker.appendChild(newItem);
+
+  const wrapper = anchorEl.closest('.top-right') || anchorEl.closest('.top-row') || anchorEl.parentElement;
+  wrapper.style.position = 'relative';
+  wrapper.appendChild(picker);
+  const closePicker = (e) => {
+    if (!picker.contains(e.target) && e.target !== anchorEl) {
+      picker.remove();
+      document.removeEventListener('click', closePicker, true);
+    }
+  };
+  setTimeout(() => document.addEventListener('click', closePicker, true), 0);
+}
+function updateCardFolderTags(confId, paperId) {
+  const card = document.querySelector(`.card .fav-btn[data-id="${CSS.escape(String(paperId))}"][data-conf="${CSS.escape(confId)}"]`)?.closest('.card');
+  if (!card) return;
+  let tagsEl = card.querySelector('.folder-tags');
+  const assigned = getFolderAssignments(confId, paperId);
+  if (assigned.length === 0) {
+    if (tagsEl) tagsEl.remove();
+    return;
+  }
+  if (!tagsEl) {
+    tagsEl = document.createElement('span');
+    tagsEl.className = 'folder-tags';
+    const topRow = card.querySelector('.top-row');
+    const topRight = card.querySelector('.top-right');
+    if (topRight) topRight.insertBefore(tagsEl, topRight.querySelector('.fav-btn'));
+  }
+  tagsEl.innerHTML = assigned.map(f => `<span class="folder-tag">${escapeHtml(f)}</span>`).join('');
+}
+function exportFolder(folderName) {
+  const lines = [];
+  const title = folderName || 'All Favorites';
+  lines.push(`# ${title}`);
+  lines.push(`# Exported ${new Date().toISOString().split('T')[0]}`);
+  lines.push('');
+
+  const papersInFolder = [];
+  if (folderName) {
+    for (const confId of Object.keys(folderData.assignments)) {
+      const confMap = folderData.assignments[confId];
+      for (const pid of Object.keys(confMap)) {
+        if (confMap[pid].includes(folderName)) {
+          papersInFolder.push({ confId, pid });
+        }
+      }
+    }
+  } else {
+    for (const confId of Object.keys(favorites)) {
+      if (!Array.isArray(favorites[confId])) continue;
+      for (const pid of favorites[confId]) {
+        papersInFolder.push({ confId, pid });
+      }
+    }
+  }
+
+  const confGroups = {};
+  for (const { confId, pid } of papersInFolder) {
+    if (!confGroups[confId]) confGroups[confId] = [];
+    confGroups[confId].push(pid);
+  }
+
+  for (const confId of Object.keys(confGroups).sort()) {
+    const allPapers = IS_FAVORITES_VIEW ? PAPERS : (confId === CONF.id ? PAPERS : []);
+    lines.push(`## ${confId.toUpperCase()}`);
+    lines.push('');
+    for (const pid of confGroups[confId]) {
+      const paper = allPapers.find(p => String(p.i) === String(pid));
+      if (paper) {
+        const authors = (paper.au || []).map(a => a[0]).join(', ');
+        lines.push(`- ${paper.t}`);
+        if (authors) lines.push(`  Authors: ${authors}`);
+        if (paper.u) lines.push(`  URL: ${paper.u}`);
+        lines.push('');
+      } else {
+        lines.push(`- [paper id: ${pid}]`);
+        lines.push('');
+      }
+    }
+  }
+
+  const blob = new Blob([lines.join('\n')], { type: 'text/markdown' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `${title.replace(/[^a-zA-Z0-9_-]/g, '_')}.md`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+function exportAllFolders() {
+  const lines = [];
+  lines.push(`# All Folders — Exported ${new Date().toISOString().split('T')[0]}`);
+  lines.push('');
+
+  for (const folderName of folderData.folders) {
+    lines.push(`## 📁 ${folderName}`);
+    lines.push('');
+    const papersInFolder = [];
+    for (const confId of Object.keys(folderData.assignments)) {
+      const confMap = folderData.assignments[confId];
+      for (const pid of Object.keys(confMap)) {
+        if (confMap[pid].includes(folderName)) papersInFolder.push({ confId, pid });
+      }
+    }
+    if (papersInFolder.length === 0) {
+      lines.push('_(empty)_');
+      lines.push('');
+      continue;
+    }
+    const confGroups = {};
+    for (const { confId, pid } of papersInFolder) {
+      if (!confGroups[confId]) confGroups[confId] = [];
+      confGroups[confId].push(pid);
+    }
+    for (const confId of Object.keys(confGroups).sort()) {
+      const allPapers = IS_FAVORITES_VIEW ? PAPERS : (confId === CONF.id ? PAPERS : []);
+      lines.push(`### ${confId.toUpperCase()}`);
+      for (const pid of confGroups[confId]) {
+        const paper = allPapers.find(p => String(p.i) === String(pid));
+        if (paper) {
+          const authors = (paper.au || []).map(a => a[0]).join(', ');
+          lines.push(`- ${paper.t}`);
+          if (authors) lines.push(`  Authors: ${authors}`);
+          if (paper.u) lines.push(`  URL: ${paper.u}`);
+        } else {
+          lines.push(`- [paper id: ${pid}]`);
+        }
+      }
+      lines.push('');
+    }
+  }
+
+  const blob = new Blob([lines.join('\n')], { type: 'text/markdown' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'all_folders.md';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+refreshFolderUI();
+
+// ---- URL state ----------------------------------------------------------
+function parseURLState() {
+  const hash = window.location.hash.slice(1);
+  const params = new URLSearchParams(hash);
+  return {
+    tab: params.get('tab') || 'all',
+    kw: params.get('kw') || '',
+    official: params.get('official') || '',
+    track: params.get('track') || '',
+    q: params.get('q') || '',
+    sa: params.get('sa') !== '0',
+    sau: params.get('sau') !== '0',
+    ps: parseInt(params.get('ps')) || 50,
+    p: parseInt(params.get('p')) || 1,
+    fav: params.get('fav') === '1',
+    folder: params.get('folder') || '',
+  };
+}
+function buildURL() {
+  const params = new URLSearchParams();
+  if (currentFilter !== 'all') params.set('tab', currentFilter);
+  if (currentKwTopic) params.set('kw', currentKwTopic);
+  if (currentOfficialTopic) params.set('official', currentOfficialTopic);
+  if (currentTrack) params.set('track', currentTrack);
+  if (currentQuery) params.set('q', currentQuery);
+  if (!searchInAbstract) params.set('sa', '0');
+  if (!searchInAuthors) params.set('sau', '0');
+  if (pageSize !== 50) params.set('ps', String(pageSize));
+  if (currentPage !== 1) params.set('p', String(currentPage));
+  if (favoritesOnly && !IS_FAVORITES_VIEW) params.set('fav', '1');
+  if (currentFolder) params.set('folder', currentFolder);
+  const str = params.toString();
+  return str ? '#' + str : window.location.pathname + window.location.search;
+}
+function updateURL(push) {
+  const newURL = buildURL();
+  const currentURL = window.location.pathname + window.location.search + window.location.hash;
+  if (push && newURL !== currentURL) {
+    try { history.pushState({ depth: ++historyDepth }, '', newURL); } catch (e) {}
+  } else {
+    try { history.replaceState(history.state, '', newURL); } catch (e) {}
+  }
+  updateBackBtn();
+}
+function updateBackBtn() {
+  $backBtn.style.display = historyDepth > 0 ? 'inline' : 'none';
+}
+
+// ---- Filtering ---------------------------------------------------------
+function recomputeFiltered() {
+  const q = currentQuery.toLowerCase().trim();
+  filtered = PAPERS.filter(p => {
+    if (favoritesOnly && !isFav(paperConfId(p), p.i)) return false;
+    if (favoritesOnly && currentFolder && !isInFolder(paperConfId(p), p.i, currentFolder)) return false;
+    if (HAS_DESIGNATION && currentFilter !== 'all' && p[DESIGNATIONS.field] !== currentFilter) return false;
+    if (HAS_TRACK_FILTER && currentTrack && p[BADGES.field] !== currentTrack) return false;
+    if (HAS_KEYWORDS && currentKwTopic) {
+      const tags = p[KW_FIELD];
+      if (!Array.isArray(tags) || !tags.includes(currentKwTopic)) return false;
+    }
+    if (HAS_TOPIC && currentOfficialTopic) {
+      const v = p[TOPIC_FIELD];
+      if (currentOfficialTopic === '__UNCLASSIFIED__') {
+        if (v) return false;
+      } else if (v !== currentOfficialTopic) {
+        return false;
+      }
+    }
+    if (!q) return true;
+    if (p.t && p.t.toLowerCase().includes(q)) return true;
+    if (searchInAbstract && p.a && p.a.toLowerCase().includes(q)) return true;
+    if (searchInAuthors) {
+      if (p.au && p.au.some(a => a[0] && a[0].toLowerCase().includes(q))) return true;
+      if (p.ins && p.ins.some(i => i.toLowerCase().includes(q))) return true;
+    }
+    return false;
+  });
+}
+function applyFilter(push) {
+  recomputeFiltered();
+  currentPage = 1;
+  render();
+  updateURL(push);
+}
+
+function typesetMath(root) {
+  if (window.MathJax && window.MathJax.typesetPromise) {
+    window.MathJax.typesetPromise([root]).catch(err => console.warn('MathJax error:', err));
+  }
+}
+
+// ---- Card rendering ----------------------------------------------------
+function buildCard(p, q) {
+  const designation = badgeFor(p);
+  const cardClass = designation && designation.card_class ? designation.card_class : '';
+  const card = document.createElement('div');
+  card.className = 'card' + (cardClass ? ' ' + cardClass : '');
+  card.dataset.idx = p._idx;
+
+  const hasAbs = HAS_ABSTRACT && !!p.a;
+
+  const tags = (HAS_KEYWORDS && Array.isArray(p[KW_FIELD])) ? p[KW_FIELD] : [];
+  const kwTagsHtml = tags.map(t => `<span class="kw-tag" data-tag="${escapeHtml(t)}">${escapeHtml(t)}</span>`).join('');
+
+  const topicVal = HAS_TOPIC ? p[TOPIC_FIELD] : null;
+  const officialHtml = topicVal ? `<span class="official-tag" data-tag="${escapeHtml(topicVal)}">${escapeHtml(String(topicVal).split('->').pop())}</span>` : '';
+
+  let authorsHtml = '';
+  if (HAS_AUTHORS && p.au && p.au.length > 0) {
+    if (p.au.length <= AUTHOR_PREVIEW_LIMIT) {
+      authorsHtml = `<div class="authors">${p.au.map(a => authorHtml(a, q)).join(', ')}</div>`;
+    } else {
+      const preview = p.au.slice(0, AUTHOR_PREVIEW_LIMIT).map(a => authorHtml(a, q)).join(', ');
+      const restRaw = p.au.slice(AUTHOR_PREVIEW_LIMIT).map(a => authorHtml(a, q)).join(', ');
+      const restEscaped = restRaw.replace(/"/g, '&quot;');
+      authorsHtml = `<div class="authors">${preview}<span class="more-authors" data-more="${restEscaped}"> … +${p.au.length - AUTHOR_PREVIEW_LIMIT} more</span></div>`;
+    }
+  }
+
+  let instHtml = '';
+  if (HAS_INST && p.ins && p.ins.length > 0) {
+    const items = p.ins.map((inst, idx) => `<span class="inst-item"><span class="inst-num">${idx+1}.</span> ${highlightWithMath(inst, q)}</span>`).join('');
+    instHtml = `<div class="institutions">${items}</div>`;
+  }
+
+  // Build the link list from CONF.links — each entry is rendered if its required field has a truthy value.
+  const linksHtml = LINKS_CFG
+    .filter(l => p[l.field] != null && p[l.field] !== '')
+    .map(l => `<a href="${escapeHtml(formatLinkUrl(l.url_template, p))}" target="_blank">${escapeHtml(l.label)}</a>`)
+    .join('');
+
+  // When BADGES is its own dimension (e.g. KDD tracks), expose the
+  // underlying value so the badge can be a click-to-filter affordance.
+  const badgeTrack = HAS_TRACK_FILTER ? (p[BADGES.field] || '') : '';
+  const badgeHtml = designation
+    ? `<span class="badge ${escapeHtml(designation.badge_class || '')}"${badgeTrack ? ` data-track="${escapeHtml(badgeTrack)}"` : ''}>${escapeHtml(designation.badge_text || '')}</span>`
+    : '';
+
+  const topLinksHtml = linksHtml ? `<div class="top-links no-mathjax">${linksHtml}</div>` : '';
+  const hasBottomChips = hasAbs || officialHtml || kwTagsHtml;
+
+  const cardConfId = paperConfId(p);
+  const favOn = isFav(cardConfId, p.i);
+  const favBtnHtml = `<button class="fav-btn${favOn ? ' is-fav' : ''}" type="button" data-id="${escapeHtml(String(p.i || ''))}" data-conf="${escapeHtml(cardConfId)}" title="${favOn ? 'Unfavorite' : 'Favorite'}&#10;Right-click: assign to folder" aria-label="Toggle favorite">${favOn ? '★' : '☆'}</button>`;
+  const cardFolders = getFolderAssignments(cardConfId, p.i);
+  const folderTagsHtml = cardFolders.length > 0
+    ? `<span class="folder-tags">${cardFolders.map(f => `<span class="folder-tag">${escapeHtml(f)}</span>`).join('')}</span>`
+    : '';
+
+  card.innerHTML = `
+    <div class="card-head">
+      <div class="top-row">
+        ${badgeHtml}
+        <span class="top-right">${topLinksHtml}${folderTagsHtml}${favBtnHtml}</span>
+      </div>
+      <div style="flex:1">
+        <div class="title">${highlightWithMath(p.t || '', q)}</div>
+        ${authorsHtml}
+        ${instHtml}
+        ${hasBottomChips ? `<div class="links no-mathjax">
+          ${hasAbs ? '<span class="toggle-abs">Abstract ▾</span>' : ''}
+          ${officialHtml}
+          ${kwTagsHtml}
+        </div>` : ''}
+        ${hasAbs ? `<div class="abstract">${highlightWithMath(p.a, q)}</div>` : ''}
+      </div>
+    </div>
+  `;
+  if (hasAbs) {
+    const toggle = card.querySelector('.toggle-abs');
+    const abs = card.querySelector('.abstract');
+    toggle.addEventListener('click', () => {
+      const wasOpen = abs.classList.contains('open');
+      abs.classList.toggle('open');
+      toggle.textContent = abs.classList.contains('open') ? 'Abstract ▴' : 'Abstract ▾';
+      if (!wasOpen) typesetMath(abs);
+    });
+  }
+  const moreAuth = card.querySelector('.more-authors');
+  if (moreAuth) {
+    moreAuth.addEventListener('click', () => {
+      const rest = moreAuth.dataset.more;
+      const span = document.createElement('span');
+      span.innerHTML = ', ' + rest;
+      moreAuth.replaceWith(span);
+    });
+  }
+  const favBtn = card.querySelector('.fav-btn');
+  if (favBtn) {
+    favBtn.addEventListener('click', () => {
+      const id = favBtn.dataset.id;
+      const cid = favBtn.dataset.conf;
+      const now = toggleFav(cid, id);
+      favBtn.classList.toggle('is-fav', now);
+      favBtn.textContent = now ? '★' : '☆';
+      favBtn.title = now ? 'Unfavorite' : 'Favorite';
+      if (favoritesOnly && !now) applyFilter(false);
+    });
+    favBtn.addEventListener('contextmenu', (e) => {
+      e.preventDefault();
+      const id = favBtn.dataset.id;
+      const cid = favBtn.dataset.conf;
+      if (!isFav(cid, id)) {
+        toggleFav(cid, id);
+        favBtn.classList.add('is-fav');
+        favBtn.textContent = '★';
+        favBtn.title = 'Unfavorite';
+      }
+      buildFolderPicker(cid, id, favBtn);
+    });
+  }
+  card.querySelectorAll('.kw-tag').forEach(el => {
+    el.addEventListener('click', () => {
+      $kwTopic.value = el.dataset.tag;
+      currentKwTopic = el.dataset.tag;
+      applyFilter(true);
+      window.scrollTo({top:0,behavior:'smooth'});
+    });
+  });
+  card.querySelectorAll('.official-tag').forEach(el => {
+    el.addEventListener('click', () => {
+      $officialTopic.value = el.dataset.tag;
+      currentOfficialTopic = el.dataset.tag;
+      applyFilter(true);
+      window.scrollTo({top:0,behavior:'smooth'});
+    });
+  });
+  if (HAS_TRACK_FILTER) {
+    card.querySelectorAll('.badge[data-track]').forEach(el => {
+      el.style.cursor = 'pointer';
+      el.addEventListener('click', () => {
+        const track = el.dataset.track;
+        currentTrack = track;
+        $trackTabs.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+        const tab = $trackTabs.querySelector('.tab[data-track-filter="' + track + '"]');
+        if (tab) tab.classList.add('active');
+        applyFilter(true);
+        window.scrollTo({top:0,behavior:'smooth'});
+      });
+    });
+  }
+  return card;
+}
+
+function render() {
+  const total = filtered.length;
+  const effectiveSize = pageSize === -1 ? total : pageSize;
+  const totalPages = effectiveSize > 0 ? Math.max(1, Math.ceil(total / effectiveSize)) : 1;
+  if (currentPage > totalPages) currentPage = totalPages;
+  const start = (currentPage - 1) * effectiveSize;
+  const end = Math.min(start + effectiveSize, total);
+  const slice = filtered.slice(start, end);
+  const q = currentQuery.toLowerCase().trim();
+
+  $stats.textContent = total === 0 ? 'No matches' : `Showing ${start+1}–${end} of ${total}`;
+
+  if (total === 0) {
+    $list.innerHTML = '<div class="empty">No papers match the current filter.</div>';
+    $pagination.innerHTML = '';
+    return;
+  }
+
+  if (slice.length > 300) {
+    $list.innerHTML = '';
+    $renderProgress.style.display = 'block';
+    $renderProgress.textContent = `Rendering ${slice.length} papers…`;
+    setTimeout(() => {
+      const frag = document.createDocumentFragment();
+      for (const p of slice) frag.appendChild(buildCard(p, q));
+      $list.appendChild(frag);
+      $renderProgress.style.display = 'none';
+      typesetMath($list);
+    }, 30);
+  } else {
+    const frag = document.createDocumentFragment();
+    for (const p of slice) frag.appendChild(buildCard(p, q));
+    $list.innerHTML = '';
+    $list.appendChild(frag);
+    typesetMath($list);
+  }
+
+  if (pageSize === -1 || totalPages === 1) {
+    $pagination.innerHTML = '';
+    return;
+  }
+  const buttons = [];
+  buttons.push(`<button ${currentPage===1?'disabled':''} data-page="1">« First</button>`);
+  buttons.push(`<button ${currentPage===1?'disabled':''} data-page="${currentPage-1}">‹ Prev</button>`);
+  buttons.push(`<span class="info">Page ${currentPage} / ${totalPages}</span>`);
+  buttons.push(`<button ${currentPage===totalPages?'disabled':''} data-page="${currentPage+1}">Next ›</button>`);
+  buttons.push(`<button ${currentPage===totalPages?'disabled':''} data-page="${totalPages}">Last »</button>`);
+  $pagination.innerHTML = buttons.join('');
+  $pagination.querySelectorAll('button').forEach(b => {
+    b.addEventListener('click', () => {
+      const p = parseInt(b.dataset.page);
+      if (!isNaN(p)) { currentPage = p; render(); updateURL(true); window.scrollTo({top:0,behavior:'smooth'}); }
+    });
+  });
+}
+
+// ---- Event handlers ----------------------------------------------------
+// Cycle / designation tabs (top row). Scoped to #tabs so they don't pick
+// up the track sub-tabs in #track-tabs.
+document.querySelectorAll('#tabs .tab').forEach(t => {
+  t.addEventListener('click', () => {
+    document.querySelectorAll('#tabs .tab').forEach(x => x.classList.remove('active'));
+    t.classList.add('active');
+    currentFilter = t.dataset.filter;
+    applyFilter(true);
+  });
+});
+
+$kwTopic.addEventListener('change', e => { currentKwTopic = e.target.value; applyFilter(true); });
+$officialTopic.addEventListener('change', e => { currentOfficialTopic = e.target.value; applyFilter(true); });
+$pageSize.addEventListener('change', e => {
+  pageSize = parseInt(e.target.value);
+  $sizeWarn.style.display = (pageSize === -1 || pageSize >= 500) ? 'inline' : 'none';
+  currentPage = 1;
+  render();
+  updateURL(true);
+});
+
+let searchTimer;
+$search.addEventListener('input', e => {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(() => {
+    currentQuery = e.target.value;
+    applyFilter(false);
+  }, 150);
+});
+$searchAbs.addEventListener('change', e => { searchInAbstract = e.target.checked; if (currentQuery) applyFilter(false); else updateURL(false); });
+$searchAuth.addEventListener('change', e => { searchInAuthors = e.target.checked; if (currentQuery) applyFilter(false); else updateURL(false); });
+
+if ($favOnly) {
+  $favOnly.addEventListener('change', e => {
+    favoritesOnly = e.target.checked;
+    applyFilter(true);
+  });
+}
+if ($favExport) {
+  $favExport.addEventListener('click', exportFavorites);
+}
+if ($favSave) {
+  $favSave.addEventListener('click', saveFavoritesToRepo);
+  // Dim the button when Save can't work here, so the user sees the
+  // constraint without having to click first.
+  if (location.protocol === 'file:') {
+    $favSave.style.opacity = '0.55';
+    $favSave.title += '\n\nCurrently on file:// — Save is disabled. Run scripts/serve.py and reopen via http://localhost.';
+  } else if (!isLocalhostHost()) {
+    $favSave.style.opacity = '0.55';
+    $favSave.title += '\n\nCurrently on ' + location.host + ' (remote/static) — Save only works locally via scripts/serve.py. Use Export here.';
+  }
+}
+if ($favReload) {
+  $favReload.addEventListener('click', () => {
+    const localCount = favsForCurrent();
+    const synced = (window.FAVORITES_SYNCED || {});
+    let syncedCount = 0;
+    for (const k of Object.keys(synced)) {
+      if (k === 'version') continue;
+      if (Array.isArray(synced[k])) syncedCount += synced[k].length;
+    }
+    if (!confirm(`Overwrite your local favorites (${localCount} starred) with the committed favorites.js (${syncedCount} starred)?\n\nThis cannot be undone — Export first if you want to keep your local state.`)) return;
+    reloadFavoritesFromFile();
+    updateFavCount();
+    applyFilter(false);
+  });
+}
+// Merged favorites view: hide the toggle (it's always on) and the per-conf
+// reset button (no per-view filter state to reset).
+if (IS_FAVORITES_VIEW && $favOnlyLabel) {
+  $favOnlyLabel.classList.add('hidden');
+}
+// ---- Folder event listeners ----
+$folderSelect.addEventListener('change', () => {
+  currentFolder = $folderSelect.value;
+  if (currentFolder && !favoritesOnly) {
+    favoritesOnly = true;
+    if ($favOnly) $favOnly.checked = true;
+  }
+  applyFilter(true);
+});
+$folderManageBtn.addEventListener('click', openFolderModal);
+$folderModalClose.addEventListener('click', closeFolderModal);
+$folderModalOverlay.addEventListener('click', (e) => {
+  if (e.target === $folderModalOverlay) closeFolderModal();
+});
+$folderAddBtn.addEventListener('click', () => {
+  if (createFolder($folderNewName.value)) {
+    $folderNewName.value = '';
+    refreshFolderModal();
+  }
+});
+$folderNewName.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') { e.preventDefault(); $folderAddBtn.click(); }
+});
+$folderModalList.addEventListener('click', (e) => {
+  const action = e.target.closest('.folder-action');
+  if (!action) return;
+  const folderName = action.dataset.folder;
+  if (action.dataset.action === 'rename') {
+    const newName = prompt(`Rename "${folderName}" to:`, folderName);
+    if (newName && newName !== folderName) {
+      renameFolder(folderName, newName);
+      refreshFolderModal();
+    }
+  } else if (action.dataset.action === 'delete') {
+    if (confirm(`Delete folder "${folderName}"? Papers will be unassigned from it but stay in your favorites.`)) {
+      deleteFolder(folderName);
+      refreshFolderModal();
+      applyFilter(false);
+    }
+  }
+});
+$folderExportBtn.addEventListener('click', () => {
+  exportFolder(currentFolder);
+});
+$folderExportAllBtn.addEventListener('click', () => {
+  exportAllFolders();
+});
+
+document.getElementById('reset').addEventListener('click', () => {
+  currentFilter = 'all';
+  currentKwTopic = '';
+  currentOfficialTopic = '';
+  currentTrack = '';
+  currentQuery = '';
+  pageSize = 50;
+  currentPage = 1;
+  searchInAbstract = HAS_ABSTRACT;
+  searchInAuthors = HAS_AUTHORS || HAS_INST;
+  favoritesOnly = IS_FAVORITES_VIEW;
+  currentFolder = '';
+  $folderSelect.value = '';
+  $kwTopic.value = '';
+  $officialTopic.value = '';
+  $search.value = '';
+  $pageSize.value = '50';
+  $searchAbs.checked = searchInAbstract;
+  $searchAuth.checked = searchInAuthors;
+  if ($favOnly) $favOnly.checked = favoritesOnly;
+  $sizeWarn.style.display = 'none';
+  document.querySelectorAll('#tabs .tab').forEach(x => x.classList.remove('active'));
+  const allTab = document.querySelector('#tabs .tab[data-filter="all"]');
+  if (allTab) allTab.classList.add('active');
+  if (HAS_TRACK_FILTER) {
+    $trackTabs.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+    const allTrack = $trackTabs.querySelector('.tab[data-track-filter=""]');
+    if (allTrack) allTrack.classList.add('active');
+  }
+  applyFilter(true);
+});
+
+$backBtn.addEventListener('click', () => { history.back(); });
+
+window.addEventListener('popstate', (e) => {
+  historyDepth = (e.state && typeof e.state.depth === 'number') ? e.state.depth : 0;
+  initFromURL();
+  recomputeFiltered();
+  render();
+  updateBackBtn();
+});
+
+function initFromURL() {
+  const state = parseURLState();
+  // Validate the URL-supplied filters against the venue's actual tab keys.
+  // This protects against stale bookmarks (e.g. an old `tab=research` from
+  // when tracks were the top-level tabs, now stuck after a schema change).
+  const designKeys = new Set(HAS_DESIGNATION ? DESIGNATIONS.tabs.map(t => t.key) : []);
+  currentFilter = (state.tab === 'all' || designKeys.has(state.tab)) ? state.tab : 'all';
+  const trackKeys = new Set(HAS_TRACK_FILTER ? BADGES.items.map(b => b.key) : []);
+  currentTrack = (state.track === '' || trackKeys.has(state.track)) ? state.track : '';
+  currentKwTopic = state.kw;
+  currentOfficialTopic = state.official;
+  currentQuery = state.q;
+  searchInAbstract = HAS_ABSTRACT && state.sa;
+  searchInAuthors = (HAS_AUTHORS || HAS_INST) && state.sau;
+  pageSize = state.ps;
+  currentPage = state.p;
+  favoritesOnly = IS_FAVORITES_VIEW || state.fav;
+  currentFolder = state.folder;
+  $folderSelect.value = currentFolder;
+  if ($favOnly) $favOnly.checked = favoritesOnly;
+  updateFavCount();
+  document.querySelectorAll('#tabs .tab').forEach(x => x.classList.remove('active'));
+  const activeTab = document.querySelector('#tabs .tab[data-filter="' + currentFilter + '"]');
+  if (activeTab) activeTab.classList.add('active');
+  if (HAS_TRACK_FILTER) {
+    $trackTabs.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+    const activeTrack = $trackTabs.querySelector('.tab[data-track-filter="' + currentTrack + '"]');
+    if (activeTrack) activeTrack.classList.add('active');
+  }
+  $kwTopic.value = currentKwTopic;
+  $officialTopic.value = currentOfficialTopic;
+  $search.value = currentQuery;
+  $searchAbs.checked = searchInAbstract;
+  $searchAuth.checked = searchInAuthors;
+  $pageSize.value = String(pageSize);
+  $sizeWarn.style.display = (pageSize === -1 || pageSize >= 500) ? 'inline' : 'none';
+}
+
+$loading.style.display = 'none';
+initFromURL();
+recomputeFiltered();
+render();
+try { history.replaceState({ depth: 0 }, '', buildURL()); } catch (e) {}
+updateBackBtn();
+</script>
+</body>
+</html>

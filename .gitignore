@@ -4,14 +4,20 @@
 
 raw/
 scripts/*
-# Exception: serve.py is the local save-favorites server invoked by the
-# in-page "★ Save" button. Ship it so cloned checkouts can use Save too.
 !scripts/serve.py
+!scripts/build_index.py
+!scripts/build_browser.py
+!scripts/fetch_abstracts.py
+!scripts/fetch_authors_inst.py
+!scripts/tag_keywords_llm.py
 conferences/
 !conferences/index.json
 analyses/
 shared/
+!shared/keyword_patterns.json
+!shared/schema.md
 templates/
+!templates/browser.html.tmpl
 
 # Legacy backup of the pre-refactor ICML browser (11 MB)
 icml2026_browser.OLD.html

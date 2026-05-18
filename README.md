@@ -69,6 +69,67 @@ includes folder assignments) and commit it to the repo.
 > disk via a local POST endpoint. Everything else (folders, filtering,
 > export downloads) works on GitHub Pages or `file://` with no server.
 
+## Adding a new conference
+
+### Project structure
+
+```
+conferences/<conf>.json   # Processed paper data (schema: shared/schema.md)
+conferences/index.json    # Conference picker for index.html
+shared/keyword_patterns.json  # 40 tag categories with regex patterns
+templates/browser.html.tmpl   # Universal browser template (~1500 lines)
+browsers/<conf>.html      # Generated self-contained HTML (what users see)
+```
+
+### Step-by-step
+
+1. **Get paper data** into `conferences/<conf>.json` following the schema in
+   `shared/schema.md`. Minimum fields: `i` (id), `t` (title), `u` (url).
+   Sources: DBLP API, OpenReview API, miniconf, ACM proceedings PDF.
+
+2. **Enrich** (optional but recommended):
+   ```bash
+   python scripts/fetch_abstracts.py     --conf <conf>   # OpenAlex + Semantic Scholar
+   python scripts/fetch_authors_inst.py  --conf <conf>   # OpenAlex authorships
+   ```
+
+3. **Tag** papers by topic:
+   ```bash
+   # Option A: regex (free, instant, ~76% coverage)
+   # Uses shared/keyword_patterns.json patterns on title + abstract
+   # Option B: Claude API (better accuracy, requires ANTHROPIC_API_KEY)
+   python scripts/tag_keywords_llm.py --conf <conf>
+   ```
+
+4. **Build** the browser:
+   ```bash
+   python scripts/build_index.py                   # update conferences/index.json
+   python scripts/build_browser.py --conf <conf>   # generate browsers/<conf>.html
+   ```
+
+5. **Commit & push**:
+   ```bash
+   git add browsers/<conf>.html conferences/index.json
+   git push
+   ```
+
+### Paper JSON schema (short keys for compactness)
+
+| Key  | Meaning |
+| ---- | ------- |
+| `i`  | Paper ID |
+| `t`  | Title |
+| `a`  | Abstract |
+| `u`  | Primary URL (DOI or OpenReview) |
+| `au` | Authors — `[[name, inst_index], ...]` |
+| `ins`| Institutions — `[name, ...]` (1-based via `au[i][1]`) |
+| `g`  | Keyword tags (array of strings) |
+| `o`  | Official topic / track name |
+| `d`  | Designation key (for tab filtering) |
+| `c`  | Cycle key (for multi-round venues like KDD) |
+
+See `shared/schema.md` for the full specification.
+
 ## Data sources
 
 - AAAI — DBLP API (4955 papers) + OpenAlex/Semantic Scholar abstracts +
