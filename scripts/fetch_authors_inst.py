@@ -133,6 +133,8 @@ def main() -> None:
     p = argparse.ArgumentParser()
     p.add_argument("--conf", required=True)
     p.add_argument("--max", type=int, help="Only process first N papers")
+    p.add_argument("--doi", action="append",
+                   help="Only process this DOI (repeat for multiple papers)")
     p.add_argument("--overwrite", action="store_true",
                    help="Re-fetch papers that already have `ins`")
     args = p.parse_args()
@@ -143,14 +145,19 @@ def main() -> None:
 
     papers = data["papers"]
     pool = papers[: args.max] if args.max else papers
+    wanted_dois = {doi.lower() for doi in (args.doi or [])}
 
     to_fetch: list[tuple[dict, str]] = []
     for paper in pool:
+        doi = doi_from_url(paper.get("u"))
+        if not doi:
+            continue
+        doi = doi.lower()
+        if wanted_dois and doi not in wanted_dois:
+            continue
         if not args.overwrite and paper.get("ins"):
             continue
-        doi = doi_from_url(paper.get("u"))
-        if doi:
-            to_fetch.append((paper, doi.lower()))
+        to_fetch.append((paper, doi))
 
     print(f"{args.conf}: pool={len(pool)}, will fetch={len(to_fetch)}")
     if not to_fetch:

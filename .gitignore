@@ -10,6 +10,7 @@ scripts/*
 !scripts/fetch_abstracts.py
 !scripts/fetch_authors_inst.py
 !scripts/tag_keywords_llm.py
+!scripts/tag_keywords_codex.py
 conferences/
 !conferences/index.json
 analyses/

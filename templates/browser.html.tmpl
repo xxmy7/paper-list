@@ -1256,6 +1256,41 @@ let favorites = loadFavorites();
 // OFF — user opts in.
 let favoritesOnly = IS_FAVORITES_VIEW;
 
+// Track counts are scoped to the active top-level designation. For KDD this
+// means the second row always describes the selected cycle instead of the
+// combined proceedings. Tracks with no papers in that cycle are hidden; if a
+// now-hidden track was selected, fall back to All.
+function updateTrackTabCounts() {
+  if (!HAS_TRACK_FILTER) return;
+  const scoped = (HAS_DESIGNATION && currentFilter !== 'all')
+    ? PAPERS.filter(p => p[DESIGNATIONS.field] === currentFilter)
+    : PAPERS;
+  const counts = {};
+  for (const p of scoped) {
+    const value = p[BADGES.field];
+    if (value) counts[value] = (counts[value] || 0) + 1;
+  }
+
+  const allTab = $trackTabs.querySelector('.tab[data-track-filter=""]');
+  if (allTab) allTab.querySelector('.count').textContent = scoped.length;
+
+  let activeTrackAvailable = currentTrack === '';
+  for (const item of BADGES.items) {
+    const tab = $trackTabs.querySelector('.tab[data-track-filter="' + item.key + '"]');
+    if (!tab) continue;
+    const count = counts[item.key] || 0;
+    tab.querySelector('.count').textContent = count;
+    tab.classList.toggle('hidden', count === 0);
+    if (item.key === currentTrack && count > 0) activeTrackAvailable = true;
+  }
+
+  if (!activeTrackAvailable) {
+    currentTrack = '';
+    $trackTabs.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+    if (allTab) allTab.classList.add('active');
+  }
+}
+
 const $list = document.getElementById('list');
 const $stats = document.getElementById('stats');
 const $pagination = document.getElementById('pagination');
@@ -2003,6 +2038,7 @@ function recomputeFiltered() {
   });
 }
 function applyFilter(push) {
+  updateTrackTabCounts();
   recomputeFiltered();
   currentPage = 1;
   render();
@@ -2417,6 +2453,7 @@ function initFromURL() {
     const activeTrack = $trackTabs.querySelector('.tab[data-track-filter="' + currentTrack + '"]');
     if (activeTrack) activeTrack.classList.add('active');
   }
+  updateTrackTabCounts();
   $kwTopic.value = currentKwTopic;
   $officialTopic.value = currentOfficialTopic;
   $search.value = currentQuery;

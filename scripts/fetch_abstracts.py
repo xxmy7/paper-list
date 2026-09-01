@@ -30,7 +30,7 @@ ROOT = Path(__file__).resolve().parents[1]
 OPENALEX_BATCH = 50
 OPENALEX_BASE = "https://api.openalex.org/works"
 SS_BASE = "https://api.semanticscholar.org/graph/v1/paper"
-SS_THROTTLE_SEC = 1.5  # no-key polite delay
+SS_BATCH = 100
 USER_AGENT = "conference-paper-list/1.0 (mailto:chunxiwang12@gmail.com)"
 
 
@@ -66,6 +66,22 @@ def http_get_json(url: str, timeout: float = 20) -> dict:
         return json.loads(r.read())
 
 
+def http_post_json(url: str, payload: dict, timeout: float = 30):
+    body = json.dumps(payload).encode("utf-8")
+    req = urllib.request.Request(
+        url,
+        data=body,
+        method="POST",
+        headers={
+            "User-Agent": USER_AGENT,
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+        },
+    )
+    with urllib.request.urlopen(req, timeout=timeout) as r:
+        return json.loads(r.read())
+
+
 def openalex_batch(dois: list[str]) -> dict[str, str]:
     """Return {doi_lower: abstract_or_empty_string}. Empty string = indexed but
     no abstract in OpenAlex. Missing key = not indexed at all."""
@@ -93,19 +109,29 @@ def openalex_batch(dois: list[str]) -> dict[str, str]:
     return out
 
 
-def semantic_scholar_one(doi: str) -> str | None:
-    url = f"{SS_BASE}/DOI:{urllib.parse.quote(doi, safe='')}?fields=abstract"
+def semantic_scholar_batch(dois: list[str]) -> dict[str, str]:
+    """Return abstracts from Semantic Scholar's batch endpoint.
+
+    The response is positionally aligned with the request and uses null for
+    unknown papers.  Batch requests are both faster and substantially more
+    reliable than hundreds of unauthenticated single-paper requests.
+    """
+    if not dois:
+        return {}
+    url = f"{SS_BASE}/batch?fields=abstract"
     try:
-        data = http_get_json(url, timeout=15)
-        return data.get("abstract")
+        rows = http_post_json(url, {"ids": [f"DOI:{doi}" for doi in dois]})
     except urllib.error.HTTPError as e:
-        if e.code in (404, 429):
-            return None
-        print(f"  ss {doi}: HTTP {e.code}", file=sys.stderr)
-        return None
+        print(f"  semantic-scholar batch HTTP {e.code}", file=sys.stderr)
+        return {}
     except Exception as e:
-        print(f"  ss {doi}: {type(e).__name__}", file=sys.stderr)
-        return None
+        print(f"  semantic-scholar batch: {type(e).__name__}: {e}", file=sys.stderr)
+        return {}
+    out: dict[str, str] = {}
+    for doi, row in zip(dois, rows):
+        if row and row.get("abstract"):
+            out[doi] = row["abstract"]
+    return out
 
 
 def main() -> None:
@@ -158,17 +184,19 @@ def main() -> None:
     if not args.no_ss:
         ss_targets = [d for _, d in to_fetch if not doi_to_abs.get(d)]
         if ss_targets:
+            n_ss_batches = (len(ss_targets) + SS_BATCH - 1) // SS_BATCH
             print(f"  semantic-scholar fallback: {len(ss_targets)} DOIs "
-                  f"(~{len(ss_targets) * SS_THROTTLE_SEC / 60:.1f} min)")
+                  f"in {n_ss_batches} batches")
             success = 0
-            for j, doi in enumerate(ss_targets):
-                abs_text = semantic_scholar_one(doi)
-                if abs_text:
-                    doi_to_abs[doi] = abs_text
-                    success += 1
-                if (j + 1) % 25 == 0:
-                    print(f"    ss {j + 1}/{len(ss_targets)}, recovered: {success}", flush=True)
-                time.sleep(SS_THROTTLE_SEC)
+            for i in range(0, len(ss_targets), SS_BATCH):
+                batch_dois = ss_targets[i:i + SS_BATCH]
+                batch_num = i // SS_BATCH + 1
+                recovered = semantic_scholar_batch(batch_dois)
+                doi_to_abs.update(recovered)
+                success += len(recovered)
+                print(f"    ss batch {batch_num}/{n_ss_batches}: "
+                      f"recovered {len(recovered)} (total {success})", flush=True)
+                time.sleep(0.5)
             print(f"  semantic-scholar: recovered {success} extra abstracts")
 
     # Apply to papers

@@ -45,8 +45,8 @@
       "name": "KDD 2026",
       "venue": "KDD",
       "year": 2026,
-      "source": "dblp",
-      "paper_count": 256,
+      "source": "dblp+acm-crossref",
+      "paper_count": 1386,
       "data_path": "conferences/kdd2026.json",
       "browser_path": "browsers/kdd2026.html"
     },

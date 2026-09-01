@@ -10,7 +10,7 @@ template reads it and adapts the UI based on `fields_present`, `designations`,
   "name": "ICML 2026",         // display name shown in header and switcher
   "venue": "ICML",             // venue acronym (used for sorting/grouping)
   "year": 2026,
-  "source": "openreview",      // "openreview" | "dblp" | "manual" (informational)
+  "source": "openreview",      // "openreview" | "dblp" | "dblp+acm-crossref" | "manual" (informational)
 
   // Which short keys are present on the paper records. Drives UI show/hide:
   //   "a"  → enables "Search abstracts" checkbox and abstract toggle
@@ -48,7 +48,7 @@ template reads it and adapts the UI based on `fields_present`, `designations`,
 
   "papers": [
     {
-      "i":  64822,                                  // id (string or int)
+      "i":  64822,                                  // stable id (string or int; DOI fallback is allowed)
       "t":  "Paper title",                          // required
       "d":  "regular",                              // designation key (see tabs above)
       "u":  "https://openreview.net/forum?id=...",  // primary paper URL

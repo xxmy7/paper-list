@@ -25,7 +25,7 @@ If Pages is enabled, the site is served at
 | CVPR 2026  | 4 069  | —         | —            | 100% | Spotlight / Regular |
 | ICLR 2026  | 5 424  | ~99%      | ~99%         | 100% | Spotlight / Regular |
 | ICML 2026  | 6 567  | ~99%      | 99.97%       | 100% | Spotlight / Regular |
-| KDD 2026   | 256    | 100%      | 100%         | 100% | Jul / Feb cycle × Research / ADS |
+| KDD 2026   | 1 386  | 100%      | 100%         | 100% | February / July × Research / ADS / Benchmark / AI4Science |
 | WWW 2026   | 954    | 90.8%     | 75.2%        | 100% | Research / Industry / Short / Web4Good |
 
 Coverage gaps are mostly venues that haven't finished ACM/OJS ingestion
@@ -35,8 +35,10 @@ yet — they'll fill in closer to the conferences' final publication dates.
 
 - **Per-conference tabs**: filter by track (Research / Industry / Short /
   Web4Good / Spotlight / etc.) and by official topic
-- **Two-cycle support** (KDD): switch between February and July cycles
-- **Tag navigation**: papers tagged by ML topic via Claude API
+- **Two-cycle support** (KDD): switch between February and July cycles;
+  track counts update to match the selected cycle
+- **Tag navigation**: papers tagged by ML topic through Claude or the
+  authenticated Codex CLI
 - **Full-text search** across titles, abstracts (when present), authors,
   and institutions; LaTeX math rendered with MathJax
 - **Author institution superscripts**: single (`Name¹`) or multi-affiliation
@@ -99,6 +101,10 @@ browsers/<conf>.html      # Generated self-contained HTML (what users see)
    # Uses shared/keyword_patterns.json patterns on title + abstract
    # Option B: Claude API (better accuracy, requires ANTHROPIC_API_KEY)
    python scripts/tag_keywords_llm.py --conf <conf>
+
+   # Option C: authenticated Codex CLI (no separate API key)
+   # --cycle is useful for multi-round venues such as KDD
+   python scripts/tag_keywords_codex.py --conf <conf> --cycle <cycle>
    ```
 
 4. **Build** the browser:
@@ -135,7 +141,8 @@ See `shared/schema.md` for the full specification.
 - AAAI — DBLP API (4955 papers) + OpenAlex/Semantic Scholar abstracts +
   OJS article metadata for track classification
 - ICML — icml.cc miniconf API + OpenReview
-- KDD — DBLP proceedings + the ACM v1 bundled PDF for abstracts + ins
+- KDD — July proceedings from DBLP/ACM plus the February ACM proceedings;
+  abstracts, authors, and institutions enriched from ACM/Crossref metadata
 - WWW — DBLP proceedings + ACM main proceedings PDF + Crossref / OpenAlex
   / Semantic Scholar fallbacks
 

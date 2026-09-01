@@ -144,11 +144,14 @@ async def run(args) -> None:
         data = json.load(f)
 
     papers = data["papers"]
-    pool = papers[: args.max] if args.max else papers
+    cycle_pool = [p for p in papers if not args.cycle or p.get("c") == args.cycle]
+    pool = cycle_pool[: args.max] if args.max else cycle_pool
 
     def should_tag(p):
         if args.overwrite:
             return True
+        if p.get("g"):
+            return False
         src = p.get("g_source")
         return src not in ("llm", "openreview")
 
@@ -205,7 +208,19 @@ async def run(args) -> None:
     with conf_path.open("w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, separators=(",", ":"))
 
+    # Keep the re-applicable sidecar in sync, merging with tags from other
+    # cycles instead of replacing them.
+    tags_path = ROOT / "conferences" / f"{args.conf}_tags.json"
+    saved_tags = {}
+    if tags_path.exists():
+        with tags_path.open("r", encoding="utf-8-sig") as f:
+            saved_tags = json.load(f)
+    saved_tags.update(results)
+    with tags_path.open("w", encoding="utf-8") as f:
+        json.dump(saved_tags, f, ensure_ascii=False, separators=(",", ":"))
+
     print(f"\nsaved {len(results)}/{len(to_tag)} tags to {conf_path}")
+    print(f"merged {len(results)} records into {tags_path}")
     if progress["fail"]:
         print(f"  WARNING: {progress['fail']} papers failed and were left unchanged")
 
@@ -224,6 +239,7 @@ def main() -> None:
     p.add_argument("--model", default=DEFAULT_MODEL, help=f"Claude model id (default {DEFAULT_MODEL})")
     p.add_argument("--concurrency", type=int, default=DEFAULT_CONCURRENCY)
     p.add_argument("--max", type=int, help="Tag only the first N papers (test runs)")
+    p.add_argument("--cycle", help="Only tag papers with this cycle key (e.g. feb)")
     p.add_argument("--overwrite", action="store_true",
                    help="Re-tag papers even if g_source is already llm/openreview")
     p.add_argument("--dry-run", action="store_true",
