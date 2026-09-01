@@ -1341,20 +1341,23 @@ if (HAS_TOPIC) {
   const officialMap = {};
   let untaggedCount = 0;
   PAPERS.forEach(p => {
-    const v = p[TOPIC_FIELD];
-    if (v) {
-      officialMap[v] = (officialMap[v]||0)+1;
+    const topics = topicValues(p);
+    if (topics.length > 0) {
+      topics.forEach(v => {
+        officialMap[v] = (officialMap[v]||0)+1;
+      });
     } else {
       untaggedCount++;
     }
   });
-  // Split topics into grouped (with Primary->Sub) and bare (top-level).
+  // Split topics into grouped (with Primary -> Sub) and bare (top-level).
   // Bare topics render as flat <option>s after the optgroups.
   const grouped = {};
   const bareTopics = [];
   for (const [topic, count] of Object.entries(officialMap)) {
-    if (topic.includes('->')) {
-      const [primary, sub] = topic.split('->');
+    const split = splitOfficialTopic(topic);
+    if (split) {
+      const [primary, sub] = split;
       if (!grouped[primary]) grouped[primary] = [];
       grouped[primary].push([topic, sub, count]);
     } else {
@@ -1394,6 +1397,22 @@ function escapeHtml(s) {
 }
 function escapeRegex(s) {
   return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+function topicValues(p) {
+  if (!HAS_TOPIC) return [];
+  const raw = p[TOPIC_FIELD];
+  if (Array.isArray(raw)) return raw.map(x => String(x).trim()).filter(Boolean);
+  if (!raw) return [];
+  return String(raw).split(/\s+\|\s+/).map(x => x.trim()).filter(Boolean);
+}
+function splitOfficialTopic(topic) {
+  const parts = String(topic).split(/\s*(?:->|→)\s*/);
+  if (parts.length < 2) return null;
+  return [parts[0], parts.slice(1).join(' → ')];
+}
+function officialTopicLabel(topic) {
+  const split = splitOfficialTopic(topic);
+  return split ? split[1] : String(topic);
 }
 function processTextMacros(s) {
   return s
@@ -2020,10 +2039,10 @@ function recomputeFiltered() {
       if (!Array.isArray(tags) || !tags.includes(currentKwTopic)) return false;
     }
     if (HAS_TOPIC && currentOfficialTopic) {
-      const v = p[TOPIC_FIELD];
+      const topics = topicValues(p);
       if (currentOfficialTopic === '__UNCLASSIFIED__') {
-        if (v) return false;
-      } else if (v !== currentOfficialTopic) {
+        if (topics.length > 0) return false;
+      } else if (!topics.includes(currentOfficialTopic)) {
         return false;
       }
     }
@@ -2064,8 +2083,9 @@ function buildCard(p, q) {
   const tags = (HAS_KEYWORDS && Array.isArray(p[KW_FIELD])) ? p[KW_FIELD] : [];
   const kwTagsHtml = tags.map(t => `<span class="kw-tag" data-tag="${escapeHtml(t)}">${escapeHtml(t)}</span>`).join('');
 
-  const topicVal = HAS_TOPIC ? p[TOPIC_FIELD] : null;
-  const officialHtml = topicVal ? `<span class="official-tag" data-tag="${escapeHtml(topicVal)}">${escapeHtml(String(topicVal).split('->').pop())}</span>` : '';
+  const officialHtml = topicValues(p)
+    .map(t => `<span class="official-tag" data-tag="${escapeHtml(t)}">${escapeHtml(officialTopicLabel(t))}</span>`)
+    .join('');
 
   let authorsHtml = '';
   if (HAS_AUTHORS && p.au && p.au.length > 0) {

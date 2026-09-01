@@ -41,6 +41,16 @@
       "browser_path": "browsers/icml2026.html"
     },
     {
+      "id": "ijcai2026",
+      "name": "IJCAI 2026",
+      "venue": "IJCAI",
+      "year": 2026,
+      "source": "ijcai-accepted",
+      "paper_count": 953,
+      "data_path": "conferences/ijcai2026.json",
+      "browser_path": "browsers/ijcai2026.html"
+    },
+    {
       "id": "kdd2026",
       "name": "KDD 2026",
       "venue": "KDD",

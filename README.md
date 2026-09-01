@@ -25,6 +25,7 @@ If Pages is enabled, the site is served at
 | CVPR 2026  | 4 069  | —         | —            | 100% | Spotlight / Regular |
 | ICLR 2026  | 5 424  | ~99%      | ~99%         | 100% | Spotlight / Regular |
 | ICML 2026  | 6 567  | ~99%      | 99.97%       | 100% | Spotlight / Regular |
+| IJCAI 2026 | 953    | 100%      | —            | 100% | Main + 7 special tracks |
 | KDD 2026   | 1 386  | 100%      | 100%         | 100% | February / July × Research / ADS / Benchmark / AI4Science |
 | WWW 2026   | 954    | 90.8%     | 75.2%        | 100% | Research / Industry / Short / Web4Good |
 
@@ -34,7 +35,7 @@ yet — they'll fill in closer to the conferences' final publication dates.
 ## Features
 
 - **Per-conference tabs**: filter by track (Research / Industry / Short /
-  Web4Good / Spotlight / etc.) and by official topic
+  Web4Good / Spotlight / etc.) and by one or more official topics
 - **Two-cycle support** (KDD): switch between February and July cycles;
   track counts update to match the selected cycle
 - **Tag navigation**: papers tagged by ML topic through Claude or the
@@ -110,7 +111,9 @@ browsers/<conf>.html      # Generated self-contained HTML (what users see)
 4. **Build** the browser:
    ```bash
    python scripts/build_index.py                   # update conferences/index.json
-   python scripts/build_browser.py --conf <conf>   # generate browsers/<conf>.html
+   # Public build: never inline the local favorites.js contents
+   python scripts/build_browser.py --conf <conf> --clean-favorites
+   python scripts/build_browser.py --all --clean-favorites
    ```
 
 5. **Commit & push**:
@@ -141,6 +144,7 @@ See `shared/schema.md` for the full specification.
 - AAAI — DBLP API (4955 papers) + OpenAlex/Semantic Scholar abstracts +
   OJS article metadata for track classification
 - ICML — icml.cc miniconf API + OpenReview
+- IJCAI — official accepted-paper metadata (953 papers)
 - KDD — July proceedings from DBLP/ACM plus the February ACM proceedings;
   abstracts, authors, and institutions enriched from ACM/Crossref metadata
 - WWW — DBLP proceedings + ACM main proceedings PDF + Crossref / OpenAlex

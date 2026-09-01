@@ -4,8 +4,8 @@ Reads templates/browser.html.tmpl, substitutes {{CONF_JSON}} and {{INDEX_JSON}}
 with embedded JSON, writes browsers/<conf>.html.
 
 Usage:
-  python scripts/build_browser.py --conf icml2026
-  python scripts/build_browser.py --all          # build every conference in index
+  python scripts/build_browser.py --conf icml2026 --clean-favorites
+  python scripts/build_browser.py --all --clean-favorites  # public build
 """
 from __future__ import annotations
 import argparse
@@ -26,13 +26,16 @@ def _safe_for_script(s: str) -> str:
             .replace("<!--", "<\\!--"))
 
 
-def _load_favorites_inline() -> str:
+def _load_favorites_inline(clean_favorites: bool = False) -> str:
     """Snapshot of favorites.js, inlined into each browser as a fallback.
 
     Lets file:// users still bootstrap their localStorage even when the
     browser blocks the external <script src="../favorites.js">. The external
     tag still runs and overrides this when it loads successfully.
     """
+    if clean_favorites:
+        return "// Public build: personal favorites are intentionally not embedded."
+
     fav_path = ROOT / "favorites.js"
     if not fav_path.exists():
         return "window.FAVORITES_SYNCED = window.FAVORITES_SYNCED || {version:1};"
@@ -40,8 +43,14 @@ def _load_favorites_inline() -> str:
         return f.read()
 
 
-def _render(template: str, conf_json: str, index_json: str, out_path: Path) -> Path:
-    fav_inline = _load_favorites_inline()
+def _render(
+    template: str,
+    conf_json: str,
+    index_json: str,
+    out_path: Path,
+    clean_favorites: bool = False,
+) -> Path:
+    fav_inline = _load_favorites_inline(clean_favorites)
     html = (template
             .replace("{{CONF_JSON}}", _safe_for_script(conf_json))
             .replace("{{INDEX_JSON}}", _safe_for_script(index_json))
@@ -54,7 +63,7 @@ def _render(template: str, conf_json: str, index_json: str, out_path: Path) -> P
     return out_path
 
 
-def render_one(conf_id: str, index_json: str) -> Path:
+def render_one(conf_id: str, index_json: str, clean_favorites: bool = False) -> Path:
     src = ROOT / "conferences" / f"{conf_id}.json"
     tmpl = ROOT / "templates" / "browser.html.tmpl"
     out = ROOT / "browsers" / f"{conf_id}.html"
@@ -66,7 +75,7 @@ def render_one(conf_id: str, index_json: str) -> Path:
 
     # Re-serialize to compact JSON to drop whitespace and ensure no BOM.
     conf_json = json.dumps(json.loads(conf_data), ensure_ascii=False, separators=(",", ":"))
-    return _render(template, conf_json, index_json, out)
+    return _render(template, conf_json, index_json, out, clean_favorites)
 
 
 # Map venue → track-* CSS class. Add new venues here as more are imported.
@@ -79,10 +88,15 @@ VENUE_BADGE_CLASS = {
     "neurips": "track-red",
     "iclr": "track-neutral",
     "cikm": "track-neutral",
+    "ijcai": "track-blue",
 }
 
 
-def render_favorites(index: dict, index_json: str) -> Path:
+def render_favorites(
+    index: dict,
+    index_json: str,
+    clean_favorites: bool = False,
+) -> Path:
     """Render browsers/favorites.html — cross-conference unified view.
 
     All conferences listed in index.json are merged into a single virtual
@@ -148,7 +162,7 @@ def render_favorites(index: dict, index_json: str) -> Path:
         "papers": papers,
     }
     conf_json = json.dumps(merged, ensure_ascii=False, separators=(",", ":"))
-    out_path = _render(template, conf_json, index_json, out)
+    out_path = _render(template, conf_json, index_json, out, clean_favorites)
     print(f"  merged {len(papers)} papers from {len(tabs)} conferences")
     return out_path
 
@@ -158,6 +172,11 @@ def main() -> None:
     p.add_argument("--conf", help="Conference id (e.g. icml2026). Omit with --all.")
     p.add_argument("--all", action="store_true", help="Build every conference listed in index.json (plus the merged favorites view)")
     p.add_argument("--favorites", action="store_true", help="Only build the merged favorites view")
+    p.add_argument(
+        "--clean-favorites",
+        action="store_true",
+        help="Do not embed local favorites.js data (recommended for public builds)",
+    )
     args = p.parse_args()
 
     idx_path = ROOT / "conferences" / "index.json"
@@ -173,12 +192,12 @@ def main() -> None:
 
     if args.all:
         for entry in idx_parsed.get("conferences", []):
-            render_one(entry["id"], index_compact)
-        render_favorites(idx_parsed, index_compact)
+            render_one(entry["id"], index_compact, args.clean_favorites)
+        render_favorites(idx_parsed, index_compact, args.clean_favorites)
     elif args.favorites:
-        render_favorites(idx_parsed, index_compact)
+        render_favorites(idx_parsed, index_compact, args.clean_favorites)
     elif args.conf:
-        render_one(args.conf, index_compact)
+        render_one(args.conf, index_compact, args.clean_favorites)
     else:
         p.error("either --conf <id>, --favorites, or --all is required")
 
